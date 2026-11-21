@@ -65,37 +65,8 @@ export default function StudentDashboard() {
 
   return (
     <div className="space-y-8 relative pb-20">
-      {/* 46. Dismissible Pinned Announcement */}
-      {showAnnouncement && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, height: 0 }}
-          className="p-4 rounded-[20px] bg-gradient-to-r from-[#2B2644] to-[#11101D] text-white flex items-center justify-between shadow-md"
-        >
-          <div className="flex items-center gap-3">
-            <span className="p-2 rounded-full bg-white/10 text-[#C5CBE8] shrink-0">
-              <AlertTriangle className="w-4 h-4" />
-            </span>
-            <div>
-              <p className="text-xs font-semibold text-white">
-                Scheduled Maintenance: Campus Wi-Fi upgrade on Saturday, 10:00 PM – 4:00 AM.
-              </p>
-              <p className="text-[11px] text-[#C9C7DA]">Academic Block B & Hostel A access points will restart.</p>
-            </div>
-          </div>
-          <button
-            onClick={() => setShowAnnouncement(false)}
-            className="p-1.5 text-white/60 hover:text-white rounded-full hover:bg-white/10 transition-colors shrink-0"
-            aria-label="Dismiss notice"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </motion.div>
-      )}
-
-      {/* 41. Welcome Banner & Greeting */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 bg-white p-6 sm:p-8 rounded-[24px] border border-[rgba(43,38,68,0.08)] shadow-[0_4px_24px_-4px_rgba(43,38,68,0.06)]">
+      {/* Welcome Banner & Greeting */}
+      <div className="flex flex-wrap items-center justify-between gap-4 bg-white p-6 sm:p-8 rounded-[24px] border border-[#2B2644]/8 shadow-[0_8px_30px_rgba(43,38,68,0.05)]">
         <div>
           <span className="text-xs font-bold text-[#64677A] uppercase tracking-wider block mb-1">
             Student Space · Digital University Kerala
@@ -114,7 +85,7 @@ export default function StudentDashboard() {
               New Complaint
             </Button>
           </Link>
-          <Link to="/app/gate">
+          <Link to="/app/qr">
             <Button variant="outline" size="md" iconLeft={<QrCode className="w-4 h-4" />}>
               Gate Pass
             </Button>
@@ -282,20 +253,20 @@ export default function StudentDashboard() {
         </Card>
       </div>
 
-      {/* 49. Recent Activity Feed */}
-      <div className="bg-white rounded-[24px] p-6 sm:p-7 border border-[rgba(43,38,68,0.08)] shadow-[0_4px_24px_-4px_rgba(43,38,68,0.06)]">
-        <div className="flex items-center justify-between mb-4">
+      {/* Row 3 (Activity Feed): Clean white card p-6 rounded-[20px] with divide-y divide-[#2B2644]/8 */}
+      <div className="bg-white rounded-[20px] p-6 border border-[#2B2644]/8 shadow-[0_8px_30px_rgba(43,38,68,0.05)]">
+        <div className="flex items-center justify-between pb-4 border-b border-[#2B2644]/8">
           <h3 className="text-sm font-bold text-[#141320]">Recent Activity Feed</h3>
           <span className="text-xs text-[#64677A]">Live client-side events</span>
         </div>
 
-        <div className="space-y-3">
+        <div className="divide-y divide-[#2B2644]/8">
           {notifications.slice(0, 4).map((n) => (
             <div
               key={n.id}
-              className="flex items-start gap-3.5 p-3.5 rounded-[16px] bg-[#F5F6FA] hover:bg-[#E9ECF6]/40 transition-colors"
+              className="py-3.5 flex items-start gap-3.5 hover:bg-[#F5F6FA] px-2 rounded-[12px] transition-colors"
             >
-              <div className="p-2 rounded-full bg-white shadow-xs shrink-0 mt-0.5">
+              <div className="p-2 rounded-full bg-[#F5F6FA] shrink-0 mt-0.5">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
               </div>
               <div className="flex-1">

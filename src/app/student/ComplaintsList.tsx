@@ -28,7 +28,7 @@ export default function ComplaintsList() {
   const { complaints, upvoteComplaint, currentStudentId } = useStore()
   const { success } = useToast()
 
-  const [activeTab, setActiveTab] = useState<'all' | 'active' | 'resolved'>('all')
+  const [activeTab, setActiveTab] = useState<'all' | 'open' | 'in_progress' | 'resolved'>('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<ComplaintCategory | 'all'>('all')
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'upvotes'>('newest')
@@ -39,7 +39,8 @@ export default function ComplaintsList() {
   // Filter complaints
   const filtered = complaints.filter((c) => {
     // Tab filter
-    if (activeTab === 'active' && c.status === 'Resolved') return false
+    if (activeTab === 'open' && c.status !== 'Submitted' && c.status !== 'Assigned') return false
+    if (activeTab === 'in_progress' && c.status !== 'In Progress') return false
     if (activeTab === 'resolved' && c.status !== 'Resolved') return false
 
     // Category filter
@@ -100,14 +101,19 @@ export default function ComplaintsList() {
       {/* Control Bar: Tabs, Search, Sort, View Toggle */}
       <div className="bg-white p-4 sm:p-5 rounded-[24px] border border-[rgba(43,38,68,0.08)] shadow-xs space-y-4">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          {/* Status Tabs */}
+          {/* Status Tabs: All, Open, In Progress, Resolved */}
           <Tabs
             tabs={[
               { id: 'all', label: 'All Issues', count: complaints.length },
               {
-                id: 'active',
-                label: 'Active',
-                count: complaints.filter((c) => c.status !== 'Resolved').length,
+                id: 'open',
+                label: 'Open',
+                count: complaints.filter((c) => c.status === 'Submitted' || c.status === 'Assigned').length,
+              },
+              {
+                id: 'in_progress',
+                label: 'In Progress',
+                count: complaints.filter((c) => c.status === 'In Progress').length,
               },
               {
                 id: 'resolved',
@@ -223,13 +229,10 @@ export default function ComplaintsList() {
           </Link>
         </Card>
       ) : viewMode === 'grid' ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {sorted.map((c) => (
             <Link key={c.id} to={`/app/complaints/${c.id}`} className="block group">
-              <Card
-                variant="elevated"
-                className="p-5 h-full flex flex-col justify-between group-hover:border-[#2B2644]/30"
-              >
+              <div className="bg-white rounded-[20px] p-6 h-full flex flex-col justify-between gap-4 border border-[#2B2644]/8 shadow-[0_8px_30px_rgba(43,38,68,0.05)] hover:shadow-[0_14px_34px_rgba(43,38,68,0.09)] hover:-translate-y-1 transition-all duration-200">
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-[11px] font-mono font-medium text-[#64677A]">
@@ -283,7 +286,7 @@ export default function ComplaintsList() {
                     <span>{relativeTime(c.createdAt)}</span>
                   </div>
                 </div>
-              </Card>
+              </div>
             </Link>
           ))}
         </div>

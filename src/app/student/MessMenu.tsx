@@ -183,10 +183,9 @@ export default function MessMenu() {
           const isServed = booking && booking.status === 'served'
 
           return (
-            <Card
+            <div
               key={meal.mealType}
-              variant="elevated"
-              className="p-6 sm:p-7 flex flex-col justify-between"
+              className="bg-white rounded-[24px] p-6 flex flex-col justify-between min-h-[280px] border border-[#2B2644]/8 shadow-[0_8px_30px_rgba(43,38,68,0.05)] hover:shadow-[0_14px_34px_rgba(43,38,68,0.09)] transition-all duration-200"
             >
               <div>
                 {/* Header */}
@@ -266,7 +265,7 @@ export default function MessMenu() {
                   )}
                 </div>
               </div>
-            </Card>
+            </div>
           )
         })}
       </div>

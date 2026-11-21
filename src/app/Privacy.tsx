@@ -1,27 +1,26 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { ShieldCheck, Lock, EyeOff, Trash2, ArrowLeft } from 'lucide-react'
-import { Card } from '@/components/ui/Card'
 
 export default function Privacy() {
   return (
-    <div className="min-h-screen bg-[#F5F6FA] text-[#141320] pt-28 pb-16">
-      <div className="max-w-3xl mx-auto px-6">
+    <div className="min-h-screen bg-[#F5F6FA] text-[#141320] py-16">
+      <div className="max-w-[900px] mx-auto px-6 space-y-8 w-full">
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-xs font-medium text-[#64677A] hover:text-[#141320] mb-8"
+          className="inline-flex items-center gap-2 text-xs font-medium text-[#64677A] hover:text-[#141320] transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to Landing</span>
         </Link>
 
         {/* Header */}
-        <div className="mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E9ECF6] text-[#2B2644] text-xs font-semibold mb-3">
+        <div>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E9ECF6] text-[#2B2644] text-xs font-semibold mb-3">
             <ShieldCheck className="w-3.5 h-3.5" />
             <span>Course Ethics Standards</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-[#141320]">
+          <h1 className="text-3xl sm:text-4xl font-medium tracking-tight text-[#141320]">
             Privacy, Ethics & Data Governance
           </h1>
           <p className="text-sm text-[#64677A] mt-2">
@@ -29,9 +28,9 @@ export default function Privacy() {
           </p>
         </div>
 
-        {/* Highlights */}
-        <div className="space-y-6">
-          <Card variant="elevated" className="p-6">
+        {/* Governance Cards */}
+        <div className="space-y-5">
+          <div className="bg-white rounded-[20px] p-6 border border-[#2B2644]/8 shadow-[0_8px_30px_rgba(43,38,68,0.05)]">
             <div className="flex items-start gap-4">
               <div className="p-3 rounded-full bg-[#2B2644] text-white shrink-0">
                 <Lock className="w-5 h-5" />
@@ -43,9 +42,9 @@ export default function Privacy() {
                 </p>
               </div>
             </div>
-          </Card>
+          </div>
 
-          <Card variant="elevated" className="p-6">
+          <div className="bg-white rounded-[20px] p-6 border border-[#2B2644]/8 shadow-[0_8px_30px_rgba(43,38,68,0.05)]">
             <div className="flex items-start gap-4">
               <div className="p-3 rounded-full bg-emerald-700 text-white shrink-0">
                 <ShieldCheck className="w-5 h-5" />
@@ -57,9 +56,9 @@ export default function Privacy() {
                 </p>
               </div>
             </div>
-          </Card>
+          </div>
 
-          <Card variant="elevated" className="p-6">
+          <div className="bg-white rounded-[20px] p-6 border border-[#2B2644]/8 shadow-[0_8px_30px_rgba(43,38,68,0.05)]">
             <div className="flex items-start gap-4">
               <div className="p-3 rounded-full bg-[#11101D] text-white shrink-0">
                 <EyeOff className="w-5 h-5" />
@@ -71,9 +70,9 @@ export default function Privacy() {
                 </p>
               </div>
             </div>
-          </Card>
+          </div>
 
-          <Card variant="elevated" className="p-6">
+          <div className="bg-white rounded-[20px] p-6 border border-[#2B2644]/8 shadow-[0_8px_30px_rgba(43,38,68,0.05)]">
             <div className="flex items-start gap-4">
               <div className="p-3 rounded-full bg-amber-600 text-white shrink-0">
                 <Trash2 className="w-5 h-5" />
@@ -85,11 +84,11 @@ export default function Privacy() {
                 </p>
               </div>
             </div>
-          </Card>
+          </div>
         </div>
 
         {/* Footer Note */}
-        <div className="mt-12 p-6 rounded-[20px] bg-[#E9ECF6]/60 border border-[rgba(43,38,68,0.08)] text-xs text-[#2B2644] leading-relaxed">
+        <div className="p-6 rounded-[20px] bg-[#E9ECF6]/60 border border-[#2B2644]/8 text-xs text-[#2B2644] leading-relaxed">
           <p className="font-semibold mb-1">DACE-I Course Reference:</p>
           Digital Access for Community Empowerment (DACE-I), Digital University Kerala, Trivandrum. Course project focused on community-aligned digital accessibility without surveillance overreach.
         </div>

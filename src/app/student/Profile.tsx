@@ -64,10 +64,10 @@ export default function Profile() {
         </p>
       </div>
 
-      {/* Side-by-side in grid-cols-1 lg:grid-cols-12 gap-8 (4 cols for ID card, 8 cols for form) */}
+      {/* Side-by-side in grid-cols-1 lg:grid-cols-12 gap-8 (5 cols for ID card, 7 cols for settings) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* LEFT COLUMN: 4 COLS (Smart Digital Student ID with 3D Flip) */}
-        <div className="lg:col-span-4 space-y-3">
+        {/* LEFT COLUMN: 5 COLS (Smart Digital Student ID with 3D Flip) */}
+        <div className="lg:col-span-5 space-y-3">
           <div className="flex items-center justify-between px-1">
             <span className="text-xs font-bold text-[#64677A] uppercase tracking-wider">
               Smart Digital Student ID
@@ -85,11 +85,11 @@ export default function Profile() {
             <motion.div
               animate={{ rotateY: isFlipped ? 180 : 0 }}
               transition={{ duration: 0.6, type: 'spring', damping: 20 }}
-              className="relative w-full h-[400px] [transform-style:preserve-3d] cursor-pointer"
+              className="relative w-full h-[430px] [transform-style:preserve-3d] cursor-pointer"
               onClick={() => setIsFlipped(!isFlipped)}
             >
-              {/* CARD FRONT */}
-              <div className="absolute inset-0 w-full h-full rounded-[24px] bg-gradient-to-br from-[#2B2644] via-[#1E1933] to-[#11101D] text-white p-6 flex flex-col justify-between shadow-2xl border border-white/10 [backface-visibility:hidden]">
+              {/* CARD FRONT: Dark #2B2644 Student Digital ID card (rounded-[24px] p-8 text-white) */}
+              <div className="absolute inset-0 w-full h-full rounded-[24px] bg-[#2B2644] text-white p-8 flex flex-col justify-between shadow-xl border border-white/10 [backface-visibility:hidden]">
                 <div>
                   <div className="flex items-center justify-between pb-3.5 border-b border-white/10">
                     <div className="flex items-center gap-2.5">
@@ -129,9 +129,9 @@ export default function Profile() {
               </div>
 
               {/* CARD BACK */}
-              <div className="absolute inset-0 w-full h-full rounded-[24px] bg-white text-[#141320] p-6 flex flex-col justify-between shadow-2xl border border-[rgba(43,38,68,0.15)] [transform:rotateY(180deg)] [backface-visibility:hidden]">
+              <div className="absolute inset-0 w-full h-full rounded-[24px] bg-white text-[#141320] p-8 flex flex-col justify-between shadow-xl border border-[#2B2644]/12 [transform:rotateY(180deg)] [backface-visibility:hidden]">
                 <div>
-                  <div className="pb-3 border-b border-[rgba(43,38,68,0.08)] flex items-center justify-between">
+                  <div className="pb-3 border-b border-[#2B2644]/8 flex items-center justify-between">
                     <span className="text-xs font-bold text-[#2B2644]">CAMPUS RECORD</span>
                     <span className="text-[10px] text-[#64677A]">Technopark IV, Trivandrum</span>
                   </div>
@@ -152,7 +152,7 @@ export default function Profile() {
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-[rgba(43,38,68,0.08)] text-center">
+                <div className="pt-3 border-t border-[#2B2644]/8 text-center">
                   <span className="text-[9px] text-[#64677A] block mb-1.5 font-medium">Auto-expires 90 days after semester completion</span>
                   <div className="h-7 w-full bg-[#11101D] rounded-[6px] flex items-center justify-center">
                     <span className="text-[9px] font-mono text-white tracking-[0.25em]">|||| | |||||| || |||||</span>
@@ -166,25 +166,53 @@ export default function Profile() {
           </p>
         </div>
 
-        {/* RIGHT COLUMN: 8 COLS (Profile Form + Switch Identity + Reset Demo Data) */}
-        <div className="lg:col-span-8 space-y-6">
-          {/* Edit Profile Card */}
-          <Card variant="elevated" className="p-6 sm:p-8">
-            <h3 className="text-base font-bold text-[#141320] mb-1">Personal Information</h3>
-            <p className="text-xs text-[#64677A] mb-5">
-              Updates persist in your browser's local sandbox storage.
-            </p>
+        {/* RIGHT COLUMN: 7 COLS (White settings card: rounded-[24px] p-8 space-y-6) */}
+        <div className="lg:col-span-7">
+          <div className="bg-white rounded-[24px] p-8 space-y-6 border border-[#2B2644]/8 shadow-[0_8px_30px_rgba(43,38,68,0.05)]">
+            <div>
+              <h3 className="text-base font-bold text-[#141320] mb-1">Personal Information</h3>
+              <p className="text-xs text-[#64677A]">
+                Updates persist in your browser's local sandbox storage.
+              </p>
+            </div>
 
             <form onSubmit={handleSave} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Input label="Full Name" value={name} onChange={(e) => setName(e.target.value)} />
-                <Input label="Institutional Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                <div>
+                  <label className="text-xs font-bold text-[#64677A] uppercase tracking-wider block mb-1.5">
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full px-4 py-3 text-xs rounded-[12px] bg-[#F5F6FA] border border-[#2B2644]/12 text-[#141320] outline-none focus:border-[#2B2644]"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-[#64677A] uppercase tracking-wider block mb-1.5">
+                    Institutional Email
+                  </label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full px-4 py-3 text-xs rounded-[12px] bg-[#F5F6FA] border border-[#2B2644]/12 text-[#141320] outline-none focus:border-[#2B2644]"
+                  />
+                </div>
               </div>
-              <Input
-                label="Department / Specialization"
-                value={department}
-                onChange={(e) => setDepartment(e.target.value)}
-              />
+
+              <div>
+                <label className="text-xs font-bold text-[#64677A] uppercase tracking-wider block mb-1.5">
+                  Department / Specialization
+                </label>
+                <input
+                  type="text"
+                  value={department}
+                  onChange={(e) => setDepartment(e.target.value)}
+                  className="w-full px-4 py-3 text-xs rounded-[12px] bg-[#F5F6FA] border border-[#2B2644]/12 text-[#141320] outline-none focus:border-[#2B2644]"
+                />
+              </div>
 
               <div className="pt-2 flex justify-end">
                 <Button variant="primary" size="md" type="submit">
@@ -192,53 +220,48 @@ export default function Profile() {
                 </Button>
               </div>
             </form>
-          </Card>
 
-          {/* Switch Identity Card */}
-          <Card variant="elevated" className="p-6 sm:p-8">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-base font-bold text-[#141320]">Switch Student Persona</h3>
-              <Badge variant="purple">18 Seeded Profiles</Badge>
+            {/* Switch Student Identity selector */}
+            <div className="pt-6 border-t border-[#2B2644]/8 space-y-3">
+              <div className="flex items-center justify-between">
+                <h4 className="text-sm font-bold text-[#141320]">Switch Student Persona</h4>
+                <Badge variant="purple">18 Seeded Profiles</Badge>
+              </div>
+              <p className="text-xs text-[#64677A]">
+                Select any student account to test with their unique complaints, wallet balance, and meal logs.
+              </p>
+              <select
+                value={currentStudentId}
+                onChange={(e) => {
+                  switchStudent(e.target.value)
+                  info(`Switched student persona`)
+                }}
+                className="w-full text-xs px-4 py-3 rounded-[12px] bg-[#F5F6FA] border border-[#2B2644]/12 text-[#141320] outline-none font-medium"
+              >
+                {students.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name} — {s.department} (Year {s.year}) · ₹{s.walletBalance} Balance
+                  </option>
+                ))}
+              </select>
             </div>
-            <p className="text-xs text-[#64677A] mb-4">
-              Select any student account from Kerala University of Digital Sciences to inspect their unique complaints, wallet balance, and meal logs.
-            </p>
-            <select
-              value={currentStudentId}
-              onChange={(e) => {
-                switchStudent(e.target.value)
-                info(`Switched student persona`)
-              }}
-              className="w-full text-xs p-3 rounded-[14px] bg-[#F5F6FA] border border-[rgba(43,38,68,0.1)] text-[#141320] outline-none font-medium"
-            >
-              {students.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.name} — {s.department} (Year {s.year}) · ₹{s.walletBalance} Balance
-                </option>
-              ))}
-            </select>
-          </Card>
 
-          {/* Reset Demo State Card */}
-          <Card variant="elevated" className="p-6 sm:p-8 border-red-100 bg-red-50/20">
-            <div className="flex items-center justify-between mb-1">
-              <h3 className="text-base font-bold text-red-700">Reset Demo Data</h3>
-              <span className="text-[10px] uppercase font-bold text-red-600 bg-red-100/60 px-2 py-0.5 rounded-full">
-                Sandbox Action
-              </span>
+            {/* Reset All Demo Data button */}
+            <div className="pt-6 border-t border-[#2B2644]/8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h4 className="text-sm font-bold text-red-700">Reset Demo State</h4>
+                <p className="text-xs text-[#64677A]">Restores all records to initial pristine seed values.</p>
+              </div>
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={() => setIsResetModalOpen(true)}
+                iconLeft={<RefreshCw className="w-3.5 h-3.5" />}
+              >
+                Reset All Demo Data
+              </Button>
             </div>
-            <p className="text-xs text-[#64677A] mb-4 leading-relaxed">
-              Restores all complaints, meal bookings, wallet transactions, and gate logs to their pristine initial seed state.
-            </p>
-            <Button
-              variant="danger"
-              size="sm"
-              onClick={() => setIsResetModalOpen(true)}
-              iconLeft={<RefreshCw className="w-3.5 h-3.5" />}
-            >
-              Reset All Demo State
-            </Button>
-          </Card>
+          </div>
         </div>
       </div>
 

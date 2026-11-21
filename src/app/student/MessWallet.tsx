@@ -83,43 +83,35 @@ export default function MessWallet() {
         </div>
       )}
 
-      {/* Big Balance Card with Gradient */}
-      <Card
-        variant="dark"
-        className="p-8 sm:p-10 relative overflow-hidden bg-gradient-to-br from-[#2B2644] to-[#11101D]"
-      >
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-          <div>
-            <span className="text-xs uppercase tracking-wider text-[#C9C7DA] font-semibold block mb-2">
-              Available Mess Credit
-            </span>
-            <div className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
-              {formatINR(currentStudent.walletBalance)}
-            </div>
-            <p className="text-xs text-[#C9C7DA] mt-3">
-              Linked Account: {currentStudent.name} ({currentStudent.department})
-            </p>
+      {/* Top balance banner */}
+      <div className="bg-[#2B2644] text-white rounded-[24px] p-8 flex flex-wrap items-center justify-between gap-6 shadow-xl border border-white/10">
+        <div>
+          <span className="text-xs uppercase tracking-wider text-[#C9C7DA] font-semibold block mb-2">
+            Available Mess Credit
+          </span>
+          <div className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+            {formatINR(currentStudent.walletBalance)}
           </div>
-
-          <div className="flex flex-col gap-2">
-            <Button
-              variant="outline"
-              size="md"
-              onClick={() => handleTopUp(500)}
-              className="bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#2B2644]"
-            >
-              Quick Top-up +₹500
-            </Button>
-            <span className="text-[11px] text-[#C9C7DA] text-center">Simulated instant credit</span>
-          </div>
+          <p className="text-xs text-[#C9C7DA] mt-3">
+            Linked Account: {currentStudent.name} ({currentStudent.department})
+          </p>
         </div>
 
-        {/* Ambient Graphic Blob */}
-        <div className="absolute -right-10 -bottom-10 w-60 h-60 bg-purple-500/10 rounded-full blur-2xl pointer-events-none" />
-      </Card>
+        <div className="flex flex-col gap-2">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => handleTopUp(500)}
+            className="bg-white text-[#2B2644] hover:bg-[#E9ECF6] border-none font-semibold px-6 py-3 rounded-full"
+          >
+            Quick Top-up +₹500
+          </Button>
+          <span className="text-[11px] text-[#C9C7DA] text-center">Simulated instant credit</span>
+        </div>
+      </div>
 
       {/* Transaction History Table */}
-      <Card variant="elevated" className="p-6 sm:p-8">
+      <div className="bg-white rounded-[24px] p-6 overflow-x-auto border border-[#2B2644]/8 shadow-[0_8px_30px_rgba(43,38,68,0.05)]">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h3 className="text-lg font-bold text-[#141320]">Transaction Ledger</h3>
@@ -133,11 +125,11 @@ export default function MessWallet() {
             No wallet activity recorded yet.
           </div>
         ) : (
-          <div className="divide-y divide-[rgba(43,38,68,0.06)]">
+          <div className="divide-y divide-[#2B2644]/8">
             {myTxns.map((t) => {
               const isPositive = t.amount > 0
               return (
-                <div key={t.id} className="py-3.5 flex items-center justify-between hover:bg-[#F5F6FA] px-2 rounded-[12px] transition-colors">
+                <div key={t.id} className="py-4 px-4 flex items-center justify-between hover:bg-[#F5F6FA] rounded-[12px] transition-colors">
                   <div className="flex items-center gap-3">
                     <div
                       className={`w-9 h-9 rounded-full flex items-center justify-center ${
@@ -176,7 +168,7 @@ export default function MessWallet() {
             })}
           </div>
         )}
-      </Card>
+      </div>
 
       {/* Top Up Modal */}
       <Modal

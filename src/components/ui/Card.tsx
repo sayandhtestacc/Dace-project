@@ -49,10 +49,10 @@ export const Card: React.FC<CardProps> = ({
   }
 
   const variantStyles = {
-    elevated: 'bg-white text-[#141320] border border-[rgba(43,38,68,0.08)] shadow-[0_4px_24px_-4px_rgba(43,38,68,0.08)] hover:shadow-[0_12px_40px_-8px_rgba(43,38,68,0.18)] hover:-translate-y-1',
-    dark: 'bg-[#2B2644] text-white border border-[rgba(255,255,255,0.08)] shadow-[0_8px_32px_-8px_rgba(43,38,68,0.2)]',
-    gradient: 'bg-gradient-to-b from-[#E9ECF6] to-[#C5CBE8] text-[#141320] border border-[rgba(43,38,68,0.12)] shadow-[0_4px_24px_-4px_rgba(43,38,68,0.08)]',
-    bordered: 'bg-transparent border border-[rgba(43,38,68,0.12)] text-[#141320]',
+    elevated: 'bg-white text-[#141320] border border-[#2B2644]/8 shadow-[0_8px_30px_rgba(43,38,68,0.05)] hover:shadow-[0_14px_34px_rgba(43,38,68,0.09)] hover:-translate-y-1',
+    dark: 'bg-[#2B2644] text-white border border-white/10 shadow-[0_8px_32px_-8px_rgba(43,38,68,0.2)] hover:border-[#C5CBE8]/30',
+    gradient: 'bg-gradient-to-br from-[#E9ECF6] via-[#DCE1F4] to-[#C5CBE8] text-[#141320] border border-[#2B2644]/8 shadow-[0_8px_30px_rgba(43,38,68,0.05)]',
+    bordered: 'bg-transparent border border-[#2B2644]/12 text-[#141320]',
   }[variant]
 
   return (
