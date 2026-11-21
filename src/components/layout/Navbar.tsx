@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Command, ArrowRight, Shield } from 'lucide-react'
 import { NotificationCenter } from '@/components/ui/NotificationCenter'
+import { CollegeLogo } from '@/components/ui/CollegeLogo'
 import { useStore } from '@/data/store'
 
 export const Navbar: React.FC = () => {
@@ -50,7 +51,7 @@ export const Navbar: React.FC = () => {
   return (
     <header className="sticky top-0 z-40 h-16 w-full shrink-0 bg-[#F5F6FA]/85 backdrop-blur-md border-b border-[#2B2644]/8">
       <div className="max-w-[1200px] h-full mx-auto px-6 md:px-10 flex items-center justify-between">
-        {/* Left: Mobile Sidebar Toggle (inside /app) + Geometric Monogram & Brand */}
+        {/* Left: Mobile Sidebar Toggle (inside /app) + Authentic College Brand */}
         <div className="flex items-center gap-3">
           {isAppPortal && (
             <button
@@ -62,16 +63,14 @@ export const Navbar: React.FC = () => {
             </button>
           )}
 
-          <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-[12px] bg-[#2B2644] text-white flex items-center justify-center font-bold text-base shadow-sm transition-transform duration-200 group-hover:scale-105">
-              <span className="bg-gradient-to-tr from-[#C5CBE8] to-white bg-clip-text text-transparent">D</span>
-            </div>
+          <Link to="/" className="flex items-center gap-3 group">
+            <CollegeLogo size="sm" />
             <div className="flex flex-col">
               <span className="font-semibold text-base tracking-tight text-[#141320] leading-none">
                 DUK Hub
               </span>
               <span className="text-[9px] uppercase tracking-wider text-[#64677A] font-bold mt-0.5">
-                Campus Services
+                Digital University Kerala
               </span>
             </div>
           </Link>
@@ -107,7 +106,7 @@ export const Navbar: React.FC = () => {
           <button
             onClick={handleOpenCommandPalette}
             className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#2B2644]/6 hover:bg-[#2B2644]/10 text-[#64677A] hover:text-[#141320] text-xs font-medium transition-colors cursor-pointer"
-            title="Press Cmd+K to search"
+            title="Press Cmd+K or Ctrl+K to search"
           >
             <Command className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Search</span>
@@ -139,7 +138,7 @@ export const Navbar: React.FC = () => {
           {!isAppPortal && (
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-full text-[#141320] hover:bg-[#2B2644]/6"
+              className="md:hidden p-2 rounded-full text-[#141320] hover:bg-[#2B2644]/6 cursor-pointer"
               aria-label="Toggle menu"
             >
               {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -179,9 +178,9 @@ export const Navbar: React.FC = () => {
                 <Link
                   to="/app"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="w-full text-center py-2.5 text-xs font-medium rounded-full bg-[#11101D] text-white"
+                  className="w-full text-center py-2.5 text-xs font-medium rounded-full bg-[#2B2644] text-white"
                 >
-                  Enter Portal
+                  Open Demo Portal
                 </Link>
               </div>
             </div>

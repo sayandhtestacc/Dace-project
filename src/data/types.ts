@@ -103,6 +103,9 @@ export interface GateLog {
   exitTime: number | null
   purpose: string
   destination: string
+  isAfterHours?: boolean
+  gateName?: string
+  scanType?: 'student_scanned_gate' | 'guard_scanned_student'
 }
 
 export interface Visitor {

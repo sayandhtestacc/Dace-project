@@ -29,42 +29,42 @@ export const RoleSwitcher: React.FC = () => {
     desc: string
     dest: string
   }[] = [
-    {
-      id: 'student',
-      label: 'Student',
-      icon: UserCheck,
-      desc: 'Raise complaints, book meals, QR pass',
-      dest: '/app',
-    },
-    {
-      id: 'mess-manager',
-      label: 'Mess Manager',
-      icon: Utensils,
-      desc: 'Headcount & mark meals served',
-      dest: '/app/mess-manager',
-    },
-    {
-      id: 'admin',
-      label: 'Dept Staff / Admin',
-      icon: Building,
-      desc: 'Assign & resolve complaints',
-      dest: '/app/admin',
-    },
-    {
-      id: 'security',
-      label: 'Security Guard',
-      icon: Shield,
-      desc: 'Gate entry verification & passes',
-      dest: '/app/security',
-    },
-    {
-      id: 'warden',
-      label: 'Warden / Super Admin',
-      icon: Users,
-      desc: 'Overall campus metrics',
-      dest: '/app/warden',
-    },
-  ]
+      {
+        id: 'student',
+        label: 'Student',
+        icon: UserCheck,
+        desc: 'Raise complaints, book meals, QR pass',
+        dest: '/app',
+      },
+      {
+        id: 'mess-manager',
+        label: 'Mess Manager',
+        icon: Utensils,
+        desc: 'Headcount & mark meals served',
+        dest: '/app/mess-manager',
+      },
+      {
+        id: 'admin',
+        label: 'Dept Staff / Admin',
+        icon: Building,
+        desc: 'Assign & resolve complaints',
+        dest: '/app/admin',
+      },
+      {
+        id: 'security',
+        label: 'Security Guard',
+        icon: Shield,
+        desc: 'Gate entry verification & passes',
+        dest: '/app/security',
+      },
+      {
+        id: 'warden',
+        label: 'Warden / Super Admin',
+        icon: Users,
+        desc: 'Overall campus metrics',
+        dest: '/app/warden',
+      },
+    ]
 
   const activeRoleObj = roles.find((r) => r.id === currentRole) || roles[0]
 
@@ -84,7 +84,7 @@ export const RoleSwitcher: React.FC = () => {
           className="flex items-center gap-2.5 px-4 py-2.5 bg-[#11101D] text-white rounded-full shadow-[0_8px_32px_rgba(17,16,29,0.35)] hover:bg-[#2B2644] active:scale-95 transition-all cursor-pointer border border-white/10"
           aria-label="Switch demo role"
         >
-          <div className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+          <div className="w-2 h-2 rounded-full bg-[#C5CBE8]" />
           <activeRoleObj.icon className="w-4 h-4 text-[#C5CBE8]" />
           <div className="flex flex-col text-left">
             <span className="text-[9px] text-[#C9C7DA] leading-none uppercase tracking-wider font-bold">
@@ -111,7 +111,7 @@ export const RoleSwitcher: React.FC = () => {
                 <span className="text-xs font-bold text-[#141320] uppercase tracking-wider">
                   Switch Persona
                 </span>
-                <span className="text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full">
+                <span className="text-[10px] text-[#2B2644] font-semibold bg-[#E9ECF6] px-2 py-0.5 rounded-full">
                   Instant Navigation
                 </span>
               </div>
@@ -123,32 +123,29 @@ export const RoleSwitcher: React.FC = () => {
                     <button
                       key={r.id}
                       onClick={() => handleSelectRole(r)}
-                      className={`w-full flex items-center justify-between p-2.5 rounded-[16px] text-left transition-all cursor-pointer ${
-                        isSelected
-                          ? 'bg-[#2B2644] text-white shadow-xs'
-                          : 'hover:bg-[#F5F6FA] text-[#141320]'
-                      }`}
+                      className={`w-full flex items-center justify-between p-2.5 rounded-[16px] text-left transition-all cursor-pointer ${isSelected
+                        ? 'bg-[#2B2644] text-white shadow-xs'
+                        : 'hover:bg-[#F5F6FA] text-[#141320]'
+                        }`}
                     >
                       <div className="flex items-center gap-3">
                         <div
-                          className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                            isSelected ? 'bg-white/10 text-white' : 'bg-[rgba(43,38,68,0.06)] text-[#2B2644]'
-                          }`}
+                          className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${isSelected ? 'bg-white/10 text-white' : 'bg-[rgba(43,38,68,0.06)] text-[#2B2644]'
+                            }`}
                         >
                           <r.icon className="w-4 h-4" />
                         </div>
                         <div>
                           <div className="text-xs font-semibold leading-tight">{r.label}</div>
                           <div
-                            className={`text-[10px] ${
-                              isSelected ? 'text-[#C9C7DA]' : 'text-[#64677A]'
-                            }`}
+                            className={`text-[10px] ${isSelected ? 'text-[#C9C7DA]' : 'text-[#64677A]'
+                              }`}
                           >
                             {r.desc}
                           </div>
                         </div>
                       </div>
-                      {isSelected && <Check className="w-4 h-4 text-emerald-400 shrink-0" />}
+                      {isSelected && <Check className="w-4 h-4 text-[#C5CBE8] shrink-0" />}
                     </button>
                   )
                 })}

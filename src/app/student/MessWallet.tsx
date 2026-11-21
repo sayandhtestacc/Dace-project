@@ -134,10 +134,10 @@ export default function MessWallet() {
                     <div
                       className={`w-9 h-9 rounded-full flex items-center justify-center ${
                         t.type === 'topup'
-                          ? 'bg-emerald-50 text-emerald-600'
+                          ? 'bg-[#EEF6F3] text-[#1E6B52]'
                           : t.type === 'refund'
-                          ? 'bg-blue-50 text-blue-600'
-                          : 'bg-red-50 text-red-600'
+                          ? 'bg-[#E9ECF6] text-[#2B2644]'
+                          : 'bg-[#FBF0F2] text-[#9E2A3B]'
                       }`}
                     >
                       {t.type === 'topup' && <ArrowDownLeft className="w-4 h-4" />}
@@ -154,7 +154,7 @@ export default function MessWallet() {
                   <div className="text-right">
                     <span
                       className={`text-sm font-bold block ${
-                        isPositive ? 'text-emerald-600' : 'text-red-600'
+                        isPositive ? 'text-[#1E6B52]' : 'text-[#9E2A3B]'
                       }`}
                     >
                       {isPositive ? `+${formatINR(t.amount)}` : formatINR(t.amount)}

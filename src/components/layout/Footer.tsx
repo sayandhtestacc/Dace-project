@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { CollegeLogo } from '@/components/ui/CollegeLogo'
 
 export const Footer: React.FC = () => {
   const location = useLocation()
@@ -14,11 +15,12 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-[#2B2644]/8">
           {/* Column 1: Brand & Institution Info */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-[12px] bg-[#2B2644] text-white flex items-center justify-center font-bold text-base shadow-sm">
-                <span>D</span>
+            <div className="flex items-center gap-3">
+              <CollegeLogo size="sm" />
+              <div className="flex flex-col">
+                <span className="font-semibold text-lg text-[#141320] leading-none">DUK Hub</span>
+                <span className="text-[10px] text-[#64677A] font-semibold mt-0.5">Digital University Kerala</span>
               </div>
-              <span className="font-semibold text-lg text-[#141320]">DUK Hub</span>
             </div>
             <p className="text-xs text-[#64677A] leading-relaxed">
               Digital University Kerala (Kerala University of Digital Sciences, Innovation and Technology), Technopark Phase IV, Trivandrum.

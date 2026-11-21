@@ -59,8 +59,8 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   return (
     <ToastContext.Provider value={{ showToast, dismissToast, success, error, warning, info }}>
       {children}
-      {/* Toast container cleanly positioned top-20 right-6 (z-50) so it NEVER overlaps bottom-right floating role pill */}
-      <div className="fixed top-20 right-6 z-50 flex flex-col gap-2.5 max-w-sm w-full pointer-events-none">
+      {/* Toast container cleanly positioned top-20 right-6 (z-[95]) so it NEVER overlaps bottom-right floating role pill */}
+      <div className="fixed top-20 right-6 z-[95] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none">
         <AnimatePresence>
           {toasts.map((toast) => (
             <motion.div
@@ -74,14 +74,14 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
               onDragEnd={(_, info) => {
                 if (info.offset.x > 80) dismissToast(toast.id)
               }}
-              className="pointer-events-auto bg-white border border-[rgba(43,38,68,0.12)] rounded-[20px] p-4 shadow-[0_16px_40px_-8px_rgba(43,38,68,0.18)] relative overflow-hidden"
+              className="pointer-events-auto bg-white border border-[#2B2644]/12 rounded-[20px] p-4 shadow-[0_16px_40px_-8px_rgba(43,38,68,0.18)] relative overflow-hidden"
             >
               <div className="flex items-start gap-3">
                 <span className="mt-0.5 shrink-0">
-                  {toast.type === 'success' && <CheckCircle2 className="w-5 h-5 text-emerald-600" />}
+                  {toast.type === 'success' && <CheckCircle2 className="w-5 h-5 text-[#2B2644]" />}
                   {toast.type === 'error' && <AlertCircle className="w-5 h-5 text-red-600" />}
                   {toast.type === 'warning' && <AlertTriangle className="w-5 h-5 text-amber-600" />}
-                  {toast.type === 'info' && <Info className="w-5 h-5 text-blue-600" />}
+                  {toast.type === 'info' && <Info className="w-5 h-5 text-[#2B2644]" />}
                 </span>
 
                 <div className="flex-1 pr-2">

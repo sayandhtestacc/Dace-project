@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
 import {
   AlertCircle,
   Utensils,
@@ -9,13 +8,7 @@ import {
   Clock,
   ArrowRight,
   Plus,
-  Bell,
   CheckCircle2,
-  AlertTriangle,
-  X,
-  Compass,
-  ChevronRight,
-  TrendingUp,
   Shield,
 } from 'lucide-react'
 import { useStore } from '@/data/store'
@@ -29,8 +22,6 @@ export default function StudentDashboard() {
   const navigate = useNavigate()
   const { currentStudentId, students, complaints, mealBookings, gateLogs, notifications } = useStore()
   const [loading, setLoading] = useState(true)
-  const [isFabOpen, setIsFabOpen] = useState(false)
-  const [showAnnouncement, setShowAnnouncement] = useState(true)
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 200)
@@ -64,7 +55,7 @@ export default function StudentDashboard() {
   }
 
   return (
-    <div className="space-y-8 relative pb-20">
+    <div className="space-y-8 relative pb-16">
       {/* Welcome Banner & Greeting */}
       <div className="flex flex-wrap items-center justify-between gap-4 bg-white p-6 sm:p-8 rounded-[24px] border border-[#2B2644]/8 shadow-[0_8px_30px_rgba(43,38,68,0.05)]">
         <div>
@@ -93,7 +84,7 @@ export default function StudentDashboard() {
         </div>
       </div>
 
-      {/* 3 KPI CARDS IN CLEAN ALIGNED 3-COLUMN GRID (grid-cols-1 md:grid-cols-3 gap-6) */}
+      {/* 3 KPI CARDS IN CLEAN ALIGNED 3-COLUMN GRID with unified lavender icon containers */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* KPI 1: Open Complaints */}
         <Link to="/app/complaints" className="block group">
@@ -103,7 +94,7 @@ export default function StudentDashboard() {
                 <span className="text-[11px] font-bold text-[#64677A] uppercase tracking-wider">
                   Open Complaints
                 </span>
-                <span className="p-2 rounded-full bg-red-50 text-red-600">
+                <span className="p-2.5 rounded-full bg-[#F0F2FA] text-[#2B2644]">
                   <AlertCircle className="w-4 h-4" />
                 </span>
               </div>
@@ -126,7 +117,7 @@ export default function StudentDashboard() {
                 <span className="text-[11px] font-bold text-[#64677A] uppercase tracking-wider">
                   Today's Meals
                 </span>
-                <span className="p-2 rounded-full bg-emerald-50 text-emerald-600">
+                <span className="p-2.5 rounded-full bg-[#F0F2FA] text-[#2B2644]">
                   <Utensils className="w-4 h-4" />
                 </span>
               </div>
@@ -143,29 +134,19 @@ export default function StudentDashboard() {
         </Link>
 
         {/* KPI 3: Gate Status */}
-        <Link to="/app/gate" className="block group">
+        <Link to="/app/qr" className="block group">
           <Card variant="elevated" className="p-6 h-full flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-3">
                 <span className="text-[11px] font-bold text-[#64677A] uppercase tracking-wider">
                   Gate Status
                 </span>
-                <span className="p-2 rounded-full bg-purple-50 text-[#2B2644]">
+                <span className="p-2.5 rounded-full bg-[#F0F2FA] text-[#2B2644]">
                   <Shield className="w-4 h-4" />
                 </span>
               </div>
-              <div className="text-2xl font-bold text-[#141320] flex items-center gap-2.5">
-                {currentGateLog ? (
-                  <>
-                    <span className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" />
-                    <span>On Campus</span>
-                  </>
-                ) : (
-                  <>
-                    <span className="w-3 h-3 rounded-full bg-slate-400" />
-                    <span>Off Campus</span>
-                  </>
-                )}
+              <div className="text-2xl font-bold text-[#141320]">
+                {currentGateLog ? 'On Campus' : 'Off Campus'}
               </div>
             </div>
             <div className="mt-4 flex items-center justify-between text-xs text-[#64677A] border-t border-[rgba(43,38,68,0.06)] pt-3">
@@ -182,8 +163,8 @@ export default function StudentDashboard() {
         <Card variant="elevated" className="p-6 sm:p-7 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="p-2 rounded-full bg-emerald-50 text-emerald-600">
+              <div className="flex items-center gap-2.5">
+                <span className="p-2 rounded-full bg-[#F0F2FA] text-[#2B2644]">
                   <Utensils className="w-4 h-4" />
                 </span>
                 <h3 className="text-base font-bold text-[#141320]">Mess Headcount System</h3>
@@ -209,7 +190,7 @@ export default function StudentDashboard() {
 
           <div className="mt-6 pt-4 border-t border-[rgba(43,38,68,0.06)] flex items-center justify-between text-xs text-[#64677A]">
             <span>Next automatic lock: 8:00 PM</span>
-            <Link to="/app/mess/wallet" className="text-[#2B2644] font-semibold hover:underline">
+            <Link to="/app/wallet" className="text-[#2B2644] font-semibold hover:underline">
               Top up Wallet →
             </Link>
           </div>
@@ -219,8 +200,8 @@ export default function StudentDashboard() {
         <Card variant="elevated" className="p-6 sm:p-7 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="p-2 rounded-full bg-purple-50 text-[#2B2644]">
+              <div className="flex items-center gap-2.5">
+                <span className="p-2 rounded-full bg-[#F0F2FA] text-[#2B2644]">
                   <QrCode className="w-4 h-4" />
                 </span>
                 <h3 className="text-base font-bold text-[#141320]">Security Gate Log</h3>
@@ -228,17 +209,17 @@ export default function StudentDashboard() {
               <Badge variant="purple">Module C</Badge>
             </div>
             <p className="text-xs text-[#64677A] leading-relaxed mb-4">
-              Scan your 30-second regenerating token at the security barrier for instant turnstile verification. Eliminates manual handwritten register queues.
+              Scan your 30-second regenerating token at the security barrier or scan the gate QR for bidirectional check-in and checkout.
             </p>
 
             <div className="p-4 rounded-[18px] bg-gradient-to-r from-[#E9ECF6] to-[#C5CBE8] flex items-center justify-between gap-4">
               <div>
                 <span className="text-[10px] text-[#2B2644]/70 uppercase font-bold block">Turnstile Gate 1 & 2</span>
-                <span className="text-xs font-bold text-[#2B2644]">30s Rotating Token Active</span>
+                <span className="text-xs font-bold text-[#2B2644]">Dual-Mode QR Active</span>
               </div>
-              <Link to="/app/gate">
+              <Link to="/app/qr">
                 <Button variant="primary" size="sm">
-                  Show Pass →
+                  Open Scanner →
                 </Button>
               </Link>
             </div>
@@ -253,7 +234,7 @@ export default function StudentDashboard() {
         </Card>
       </div>
 
-      {/* Row 3 (Activity Feed): Clean white card p-6 rounded-[20px] with divide-y divide-[#2B2644]/8 */}
+      {/* Row 3 (Activity Feed): Clean white card */}
       <div className="bg-white rounded-[20px] p-6 border border-[#2B2644]/8 shadow-[0_8px_30px_rgba(43,38,68,0.05)]">
         <div className="flex items-center justify-between pb-4 border-b border-[#2B2644]/8">
           <h3 className="text-sm font-bold text-[#141320]">Recent Activity Feed</h3>
@@ -266,8 +247,8 @@ export default function StudentDashboard() {
               key={n.id}
               className="py-3.5 flex items-start gap-3.5 hover:bg-[#F5F6FA] px-2 rounded-[12px] transition-colors"
             >
-              <div className="p-2 rounded-full bg-[#F5F6FA] shrink-0 mt-0.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              <div className="p-2 rounded-full bg-[#F5F6FA] shrink-0 mt-0.5 text-[#2B2644]">
+                <CheckCircle2 className="w-4 h-4 text-[#2B2644]" />
               </div>
               <div className="flex-1">
                 <div className="flex items-center justify-between">
@@ -278,57 +259,6 @@ export default function StudentDashboard() {
               </div>
             </div>
           ))}
-        </div>
-      </div>
-
-      {/* 23. Floating Action Button (FAB) Morph */}
-      <div className="fixed bottom-24 right-6 z-40">
-        <div className="relative">
-          <AnimatePresence>
-            {isFabOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: 15, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 15, scale: 0.9 }}
-                className="absolute bottom-16 right-0 mb-2 w-52 bg-white rounded-[20px] shadow-2xl border border-[rgba(43,38,68,0.12)] p-2 space-y-1"
-              >
-                <Link
-                  to="/app/complaints/new"
-                  onClick={() => setIsFabOpen(false)}
-                  className="flex items-center gap-2.5 p-2.5 rounded-[12px] hover:bg-[#F5F6FA] text-xs font-semibold text-[#141320]"
-                >
-                  <AlertCircle className="w-4 h-4 text-red-600" />
-                  <span>Raise Complaint</span>
-                </Link>
-                <Link
-                  to="/app/mess"
-                  onClick={() => setIsFabOpen(false)}
-                  className="flex items-center gap-2.5 p-2.5 rounded-[12px] hover:bg-[#F5F6FA] text-xs font-semibold text-[#141320]"
-                >
-                  <Utensils className="w-4 h-4 text-emerald-600" />
-                  <span>Book Tomorrow's Meal</span>
-                </Link>
-                <Link
-                  to="/app/gate"
-                  onClick={() => setIsFabOpen(false)}
-                  className="flex items-center gap-2.5 p-2.5 rounded-[12px] hover:bg-[#F5F6FA] text-xs font-semibold text-[#141320]"
-                >
-                  <QrCode className="w-4 h-4 text-[#2B2644]" />
-                  <span>Scan Campus Gate</span>
-                </Link>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          <button
-            onClick={() => setIsFabOpen(!isFabOpen)}
-            className="w-13 h-13 rounded-full bg-[#11101D] text-white flex items-center justify-center shadow-xl hover:bg-[#2B2644] active:scale-95 transition-all cursor-pointer"
-            aria-label="Quick Actions Menu"
-          >
-            <motion.div animate={{ rotate: isFabOpen ? 45 : 0 }} transition={{ duration: 0.2 }}>
-              <Plus className="w-6 h-6" />
-            </motion.div>
-          </button>
         </div>
       </div>
     </div>

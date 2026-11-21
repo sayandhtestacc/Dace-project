@@ -190,14 +190,11 @@ export default function MessMenu() {
               <div>
                 {/* Header */}
                 <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={`w-3 h-3 rounded-full border-2 border-white shadow-xs ${
-                        meal.isVeg ? 'bg-emerald-500' : 'bg-red-500'
-                      }`}
-                      title={meal.isVeg ? 'Vegetarian' : 'Non-Vegetarian'}
-                    />
+                  <div className="flex items-center gap-2.5">
                     <h3 className="text-lg font-bold text-[#141320]">{meal.mealType}</h3>
+                    <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md bg-[#2B2644]/6 text-[#2B2644]">
+                      {meal.isVeg ? 'Veg' : 'Non-Veg'}
+                    </span>
                   </div>
 
                   <span className="text-sm font-bold text-[#2B2644]">
@@ -213,7 +210,7 @@ export default function MessMenu() {
                   <ul className="space-y-1.5 text-xs text-[#141320] font-medium">
                     {meal.items.map((it) => (
                       <li key={it} className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#2B2644]" />
+                        <span className="text-[#64677A] font-semibold">–</span>
                         <span>{it}</span>
                       </li>
                     ))}
@@ -225,9 +222,9 @@ export default function MessMenu() {
               <div className="pt-4 border-t border-[rgba(43,38,68,0.06)] flex items-center justify-between">
                 <div>
                   {isBooked ? (
-                    <Badge variant="success" pulse>
+                    <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#E9ECF6] text-[#2B2644]">
                       Booked
-                    </Badge>
+                    </span>
                   ) : isServed ? (
                     <Badge variant="neutral">Served</Badge>
                   ) : isSkipped ? (
@@ -253,7 +250,7 @@ export default function MessMenu() {
                       Skip & Refund
                     </Button>
                   ) : isServed ? (
-                    <span className="text-xs font-semibold text-emerald-700">Meal Collected</span>
+                    <span className="text-xs font-semibold text-[#2B2644]">Meal Collected</span>
                   ) : (
                     <Button
                       variant="primary"
@@ -287,7 +284,7 @@ export default function MessMenu() {
               <span className="text-[10px] text-[#64677A] uppercase font-bold block leading-none">
                 Remaining Wallet
               </span>
-              <span className="text-sm font-semibold text-emerald-700">
+              <span className="text-sm font-semibold text-[#2B2644]">
                 {formatINR(currentStudent.walletBalance)}
               </span>
             </div>

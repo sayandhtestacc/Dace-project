@@ -12,6 +12,7 @@ import {
 } from 'lucide-react'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
+import { CollegeLogo } from '@/components/ui/CollegeLogo'
 
 export default function Landing() {
   return (
@@ -26,14 +27,14 @@ export default function Landing() {
 
             {/* Strictly Centered Hero Content */}
             <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
-              {/* Eyebrow Pill */}
+              {/* College Logo & Eyebrow Pill */}
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35 }}
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-[#2B2644]/10 text-[#2B2644] text-xs font-semibold mb-6 shadow-xs"
+                className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-[#2B2644]/10 text-[#2B2644] text-xs font-semibold mb-6 shadow-xs"
               >
-                <Sparkles className="w-3.5 h-3.5 text-[#2B2644]" />
+                <CollegeLogo size="xs" />
                 <span>DACE-I Student Innovation Showcase · Digital University Kerala</span>
               </motion.div>
 
@@ -149,7 +150,7 @@ export default function Landing() {
               >
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-3">
-                    <Badge variant="purple" pulse>
+                    <Badge variant="purple">
                       Module A
                     </Badge>
                     <ArrowRight className="w-5 h-5 text-[#2B2644] transition-transform group-hover:translate-x-1" />
@@ -190,8 +191,8 @@ export default function Landing() {
                 </div>
 
                 <div className="pt-4 border-t border-white/10">
-                  <span className="text-xs font-medium text-emerald-400 block mb-0.5">
-                    ● Zero Food Waste
+                  <span className="text-xs font-medium text-white block mb-0.5">
+                    Zero Food Waste
                   </span>
                   <span className="text-[11px] text-[#C9C7DA]">Next cutoff: 8:00 PM</span>
                 </div>
@@ -199,7 +200,7 @@ export default function Landing() {
             </Link>
 
             {/* Card 3: Right (1 col) */}
-            <Link to="/app/gate" className="lg:col-span-1 block group">
+            <Link to="/app/qr" className="lg:col-span-1 block group">
               <Card
                 variant="dark"
                 spotlight
@@ -221,7 +222,7 @@ export default function Landing() {
 
                 <div className="pt-4 border-t border-white/10">
                   <span className="text-xs font-medium text-[#C5CBE8] block mb-0.5">
-                    ● 30s Live Token
+                    30s Live Token
                   </span>
                   <span className="text-[11px] text-[#C9C7DA]">Zero paper registers</span>
                 </div>
@@ -235,11 +236,14 @@ export default function Landing() {
       <section className="py-10">
         <div className="max-w-[1200px] mx-auto px-6 md:px-10 w-full">
           <div className="flex justify-between items-center flex-wrap gap-6 border-y border-[#2B2644]/8 py-6">
-            <div className="shrink-0">
-              <p className="text-xs font-bold text-[#141320] uppercase tracking-wider">
-                Digital University Kerala
-              </p>
-              <p className="text-[11px] text-[#64677A]">DACE-I Innovation Showcase 2026</p>
+            <div className="shrink-0 flex items-center gap-3">
+              <CollegeLogo size="sm" />
+              <div>
+                <p className="text-xs font-bold text-[#141320] uppercase tracking-wider">
+                  Digital University Kerala
+                </p>
+                <p className="text-[11px] text-[#64677A]">DACE-I Innovation Showcase 2026</p>
+              </div>
             </div>
 
             <div className="flex items-center gap-8 md:gap-12 opacity-65 flex-wrap">
@@ -274,15 +278,15 @@ export default function Landing() {
 
               <ul className="space-y-3 text-xs text-[#141320] font-medium">
                 <li className="flex items-center gap-2.5">
-                  <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <CheckCircle className="w-4 h-4 text-[#2B2644] shrink-0" />
                   <span>Instant 1-click role switching for committee evaluation</span>
                 </li>
                 <li className="flex items-center gap-2.5">
-                  <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <CheckCircle className="w-4 h-4 text-[#2B2644] shrink-0" />
                   <span>Zero external dependencies or CDNs that could fail during demo</span>
                 </li>
                 <li className="flex items-center gap-2.5">
-                  <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <CheckCircle className="w-4 h-4 text-[#2B2644] shrink-0" />
                   <span>Pre-seeded with 18 realistic Kerala student profiles</span>
                 </li>
               </ul>
@@ -320,13 +324,13 @@ export default function Landing() {
                     </div>
                     <div className="bg-white p-3.5 rounded-[12px] border border-[#2B2644]/6">
                       <span className="text-[10px] text-[#64677A] uppercase font-bold block">On Campus</span>
-                      <span className="text-base font-bold text-emerald-600 mt-0.5 block">9 Active</span>
+                      <span className="text-base font-bold text-[#2B2644] mt-0.5 block">9 Active</span>
                     </div>
                   </div>
 
                   <div className="h-14 rounded-[12px] bg-gradient-to-r from-[#E9ECF6] to-[#C5CBE8] flex items-center justify-between px-4">
                     <div className="flex items-center gap-2">
-                      <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-[#2B2644] animate-pulse" />
                       <span className="text-xs font-semibold text-[#2B2644]">Live Verification Gate Stream</span>
                     </div>
                     <span className="text-[11px] font-mono text-[#2B2644]/80">GATE-01 · ACTIVE</span>
@@ -338,7 +342,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ─── DARK STATS PILL BAR (my-12) ─── */}
+      {/* ─── DARK STATS PILL BAR (my-12): De-AI polish with pure white / soft lavender Zero ─── */}
       <section className="my-12" id="impact">
         <div className="max-w-[1200px] mx-auto px-6 md:px-10 w-full">
           <div className="bg-[#2B2644] text-white rounded-[28px] px-8 py-10 grid grid-cols-1 md:grid-cols-3 gap-8 text-center shadow-lg">
@@ -361,7 +365,7 @@ export default function Landing() {
             </div>
 
             <div>
-              <span className="block text-4xl sm:text-5xl font-bold tracking-tight text-emerald-400 mb-2">
+              <span className="block text-4xl sm:text-5xl font-bold tracking-tight text-white mb-2">
                 Zero
               </span>
               <span className="text-xs text-[#C9C7DA] uppercase tracking-wider font-semibold">

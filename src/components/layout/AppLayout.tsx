@@ -12,9 +12,9 @@ import {
   History,
   X,
   Users,
-  Building,
 } from 'lucide-react'
 import { useStore } from '@/data/store'
+import { CollegeLogo } from '@/components/ui/CollegeLogo'
 
 export const AppLayout: React.FC = () => {
   const [showBanner, setShowBanner] = useState(true)
@@ -121,7 +121,7 @@ export const AppLayout: React.FC = () => {
       {/* 2. Main Shell: Sidebar beside Content in standard flex flow */}
       <div className="flex flex-1 w-full">
         {/* Desktop Left Sidebar: fixed 256px width, sticky below navbar */}
-        <aside className="hidden lg:flex w-64 shrink-0 flex-col bg-white border-r border-[#2B2644]/10 sticky top-16 h-[calc(100vh-4rem)] p-5 justify-between overflow-y-auto">
+        <aside className="hidden lg:flex w-64 shrink-0 flex-col bg-white border-r border-[#2B2644]/10 sticky top-16 h-[calc(100vh-4rem)] p-5 pb-6 justify-between overflow-y-auto">
           {/* User Persona Card */}
           <div>
             <div className="p-3.5 rounded-[16px] bg-[#F5F6FA] border border-[#2B2644]/6 mb-5">
@@ -171,7 +171,7 @@ export const AppLayout: React.FC = () => {
           </div>
 
           {/* Footer Card */}
-          <div className="pt-4 border-t border-[#2B2644]/8">
+          <div className="pt-4 border-t border-[#2B2644]/8 space-y-3">
             <Link
               to="/login"
               className="flex items-center justify-between w-full px-3.5 py-2.5 rounded-[14px] text-xs font-medium border border-[#2B2644]/12 bg-[#F5F6FA] text-[#2B2644] hover:bg-[#2B2644] hover:text-white transition-all shadow-2xs"
@@ -180,10 +180,15 @@ export const AppLayout: React.FC = () => {
                 <Shield className="w-3.5 h-3.5" />
                 <span>Switch Role</span>
               </div>
-              <span className="text-[10px] uppercase font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-md border border-emerald-200">
+              <span className="text-[10px] uppercase font-bold text-[#2B2644] bg-[#E9ECF6] px-1.5 py-0.5 rounded-md border border-[#2B2644]/15">
                 {roleInfo.badge}
               </span>
             </Link>
+
+            <div className="flex items-center justify-center gap-2 pt-1 opacity-70">
+              <CollegeLogo size="xs" />
+              <span className="text-[10px] text-[#64677A] font-semibold">DUK Campus Cloud</span>
+            </div>
           </div>
         </aside>
 
@@ -208,9 +213,7 @@ export const AppLayout: React.FC = () => {
                 <div>
                   <div className="flex items-center justify-between pb-4 mb-4 border-b border-[#2B2644]/8">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-[10px] bg-[#2B2644] text-white flex items-center justify-center font-bold text-xs">
-                        D
-                      </div>
+                      <CollegeLogo size="sm" />
                       <div>
                         <h4 className="text-xs font-bold text-[#141320]">{roleInfo.title}</h4>
                         <p className="text-[10px] text-[#64677A]">{roleInfo.subtitle}</p>
@@ -259,20 +262,18 @@ export const AppLayout: React.FC = () => {
           )}
         </AnimatePresence>
 
-        {/* Main Scrollable Content Area */}
-        <main className="flex-1 min-w-0 w-full p-6 md:p-8 lg:p-10">
+        {/* Main Scrollable Content Area: pb-24 prevents clipping by mobile quick-bars */}
+        <main className="flex-1 min-w-0 w-full p-6 md:p-8 lg:p-10 pb-24">
           <div className="max-w-6xl mx-auto w-full space-y-8">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={location.pathname}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <Outlet />
-              </motion.div>
-            </AnimatePresence>
+            {/* Pure Mount Transition with NO mode="wait" to eliminate white screens */}
+            <motion.div
+              key={location.pathname}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <Outlet />
+            </motion.div>
           </div>
         </main>
       </div>

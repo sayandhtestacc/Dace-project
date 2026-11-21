@@ -30,8 +30,22 @@ interface AppState extends SeedData {
   topUpWallet: (studentId: string, amount: number) => void
 
   // ─── Gate ───
-  logEntry: (studentId: string, purpose: string, destination: string) => void
+  activeGateToken: string
+  activeGateName: string
+  isGateAfterHoursMode: boolean
+  setGateName: (name: string) => void
+  setGateAfterHoursMode: (isAfter: boolean) => void
+  rotateGateToken: () => void
+  logEntry: (
+    studentId: string,
+    purpose: string,
+    destination: string,
+    isAfterHours?: boolean,
+    gateName?: string,
+    scanType?: 'student_scanned_gate' | 'guard_scanned_student'
+  ) => void
   logExit: (logId: string) => void
+  logExitForStudent: (studentId: string) => void
   addVisitor: (visitor: Omit<Visitor, 'id'>) => void
 
   // ─── Notifications ───
@@ -55,6 +69,19 @@ export const useStore = create<AppState>()(
     (set, get) => ({
       ...createSeedData(),
       complaintDraft: null,
+      activeGateToken: 'GATE-1-8492A',
+      activeGateName: 'Main Gate 1',
+      isGateAfterHoursMode: false,
+
+      setGateName: (name: string) => set({ activeGateName: name }),
+      setGateAfterHoursMode: (isAfter: boolean) => set({ isGateAfterHoursMode: isAfter }),
+      rotateGateToken: () =>
+        set({
+          activeGateToken: `GATE-${Math.floor(Math.random() * 3 + 1)}-${Math.random()
+            .toString(36)
+            .substring(2, 6)
+            .toUpperCase()}`,
+        }),
 
       // ─── Role ───
       switchRole: (role) => set({ currentRole: role }),
@@ -228,18 +255,21 @@ export const useStore = create<AppState>()(
       }),
 
       // ─── Gate ───
-      logEntry: (studentId, purpose, destination) => {
+      logEntry: (studentId, purpose, destination, isAfterHours = false, gateName = 'Main Gate 1', scanType = 'student_scanned_gate') => {
         const student = get().students.find(s => s.id === studentId)!
         set(s => ({
           gateLogs: [{
             id: id(),
             studentId,
-            studentName: student.name,
-            department: student.department,
+            studentName: student ? student.name : 'Unknown Scholar',
+            department: student ? student.department : 'General',
             entryTime: Date.now(),
             exitTime: null,
             purpose,
             destination,
+            isAfterHours,
+            gateName,
+            scanType,
           }, ...s.gateLogs],
         }))
       },
@@ -249,6 +279,16 @@ export const useStore = create<AppState>()(
           l.id === logId ? { ...l, exitTime: Date.now() } : l
         ),
       })),
+
+      logExitForStudent: (studentId) => set(s => {
+        const active = s.gateLogs.find(l => l.studentId === studentId && l.exitTime === null)
+        if (!active) return s
+        return {
+          gateLogs: s.gateLogs.map(l =>
+            l.id === active.id ? { ...l, exitTime: Date.now() } : l
+          ),
+        }
+      }),
 
       addVisitor: (visitor) => set(s => ({
         visitors: [{ ...visitor, id: id() }, ...s.visitors],

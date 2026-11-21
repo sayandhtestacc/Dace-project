@@ -17,10 +17,10 @@ import { useStore } from '@/data/store'
 import { generateQRMatrix, renderQRToSVG } from '@/lib/qr'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
 import { Badge } from '@/components/ui/Badge'
 import { Modal } from '@/components/ui/Modal'
 import { useToast } from '@/components/ui/Toast'
+import { CollegeLogo } from '@/components/ui/CollegeLogo'
 
 export default function Profile() {
   const { currentStudentId, students, resetDemoData, switchStudent } = useStore()
@@ -81,24 +81,22 @@ export default function Profile() {
             </button>
           </div>
 
-          <div className="perspective-1000">
+          <div className="perspective-[1200px] w-full">
             <motion.div
               animate={{ rotateY: isFlipped ? 180 : 0 }}
-              transition={{ duration: 0.6, type: 'spring', damping: 20 }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
               className="relative w-full h-[430px] [transform-style:preserve-3d] cursor-pointer"
               onClick={() => setIsFlipped(!isFlipped)}
             >
-              {/* CARD FRONT: Dark #2B2644 Student Digital ID card (rounded-[24px] p-8 text-white) */}
+              {/* CARD FRONT: Dark #2B2644 Student Digital ID card */}
               <div className="absolute inset-0 w-full h-full rounded-[24px] bg-[#2B2644] text-white p-8 flex flex-col justify-between shadow-xl border border-white/10 [backface-visibility:hidden]">
                 <div>
                   <div className="flex items-center justify-between pb-3.5 border-b border-white/10">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-[10px] bg-white text-[#2B2644] font-bold text-xs flex items-center justify-center shadow-xs">
-                        D
-                      </div>
+                      <CollegeLogo size="xs" />
                       <span className="text-xs font-bold tracking-wider">DUK DIGITAL ID</span>
                     </div>
-                    <span className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-400/20">
+                    <span className="text-[10px] text-[#E9ECF6] font-bold uppercase tracking-wider bg-white/12 px-2.5 py-0.5 rounded-full border border-white/15">
                       Verified
                     </span>
                   </div>

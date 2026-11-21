@@ -1,15 +1,40 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%" fill="none">
   <defs>
-    <linearGradient id="dukGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="dukShield" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#2B2644"/>
       <stop offset="100%" stop-color="#11101D"/>
     </linearGradient>
-    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="dukAccent" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="50%" stop-color="#E9ECF6"/>
       <stop offset="100%" stop-color="#C5CBE8"/>
     </linearGradient>
+    <linearGradient id="flameGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#9E86FF"/>
+      <stop offset="100%" stop-color="#FFFFFF"/>
+    </linearGradient>
   </defs>
-  <rect width="100" height="100" rx="28" fill="url(#dukGrad)"/>
-  <path d="M34 26 H52 C65 26 74 35 74 50 C74 65 65 74 52 74 H34 Z" fill="none" stroke="url(#accentGrad)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="50" cy="50" r="6" fill="#C5CBE8"/>
+  <!-- Outer Rounded Shield -->
+  <rect x="4" y="4" width="112" height="112" rx="30" fill="url(#dukShield)" stroke="rgba(255,255,255,0.14)" stroke-width="2"/>
+  
+  <!-- Digital Circuit Nodes Ring -->
+  <circle cx="60" cy="60" r="44" stroke="rgba(197,203,232,0.2)" stroke-width="1.5" stroke-dasharray="4 6"/>
+  <circle cx="60" cy="16" r="3" fill="#C5CBE8"/>
+  <circle cx="104" cy="60" r="3" fill="#C5CBE8"/>
+  <circle cx="60" cy="104" r="3" fill="#C5CBE8"/>
+  <circle cx="16" cy="60" r="3" fill="#C5CBE8"/>
+
+  <!-- Academic Torch & Digital Wisdom Emblem -->
+  <path d="M60 28 C64 38 72 44 72 52 C72 62 64 68 60 70 C56 68 48 62 48 52 C48 44 56 38 60 28 Z" fill="url(#flameGrad)" opacity="0.95"/>
+  <path d="M60 38 C62 44 66 48 66 52 C66 58 62 62 60 63 C58 62 54 58 54 52 C54 48 58 44 60 38 Z" fill="#2B2644"/>
+
+  <!-- Open Digital Book / Wings -->
+  <path d="M30 68 C42 66 54 70 60 76 C66 70 78 66 90 68 C88 80 76 86 60 88 C44 86 32 80 30 68 Z" fill="url(#dukAccent)" opacity="0.9"/>
+  <path d="M60 74 V88" stroke="#2B2644" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Foundation Banner / KUDSIT Nodes -->
+  <circle cx="48" cy="94" r="2.5" fill="#C5CBE8"/>
+  <circle cx="60" cy="94" r="3.5" fill="#FFFFFF"/>
+  <circle cx="72" cy="94" r="2.5" fill="#C5CBE8"/>
+  <line x1="42" y1="94" x2="78" y2="94" stroke="rgba(197,203,232,0.4)" stroke-width="1.5"/>
 </svg>
