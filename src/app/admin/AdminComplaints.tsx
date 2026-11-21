@@ -131,7 +131,7 @@ export default function AdminComplaints() {
                 <th className="py-3 px-4">Student</th>
                 <th className="py-3 px-4">Category</th>
                 <th className="py-3 px-4">Issue Title</th>
-                <th className="py-3 px-4">Priority</th>
+                <th className="py-3 px-4">Priority & SLA</th>
                 <th className="py-3 px-4">Assignee</th>
                 <th className="py-3 px-4">Status Changer</th>
                 <th className="py-3 px-4 text-right">Actions</th>
@@ -140,6 +140,12 @@ export default function AdminComplaints() {
             <tbody className="divide-y divide-[rgba(43,38,68,0.06)]">
               {filtered.map((c) => {
                 const stu = students.find((s) => s.id === c.studentId)
+                const slaTargetMs = 24 * 3600 * 1000
+                const remainingMs = c.createdAt + slaTargetMs - Date.now()
+                const isOverdue = remainingMs <= 0
+                const hoursRemaining = Math.max(0, Math.floor(remainingMs / (3600 * 1000)))
+                const hoursOverdue = Math.abs(Math.floor(remainingMs / (3600 * 1000)))
+
                 return (
                   <tr key={c.id} className="hover:bg-[#F5F6FA]/60 transition-colors">
                     <td className="py-3.5 px-4 font-mono font-medium text-[#2B2644]">
@@ -169,9 +175,24 @@ export default function AdminComplaints() {
                     </td>
 
                     <td className="py-3.5 px-4">
-                      <Badge variant={c.priority === 'Urgent' ? 'error' : 'neutral'}>
-                        {c.priority}
-                      </Badge>
+                      <div className="flex flex-col gap-1 items-start">
+                        <Badge variant={c.priority === 'Urgent' ? 'error' : 'neutral'}>
+                          {c.priority}
+                        </Badge>
+                        {c.status === 'Resolved' ? (
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#EEF6F3] text-[#1E6B52]">
+                            SLA Met
+                          </span>
+                        ) : isOverdue ? (
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#FBF0F2] text-[#9E2A3B] border border-[#9E2A3B]/20">
+                            Overdue ({hoursOverdue}h)
+                          </span>
+                        ) : (
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#F0F2FA] text-[#2B2644]">
+                            {hoursRemaining}h SLA
+                          </span>
+                        )}
+                      </div>
                     </td>
 
                     {/* Assignee Dropdown */}

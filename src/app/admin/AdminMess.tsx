@@ -103,11 +103,11 @@ export default function AdminMess() {
                 Breakfast Prep
               </span>
               <div className="text-4xl font-extrabold text-[#141320]">{tomorrowBreakfast}</div>
-              <span className="text-xs text-emerald-600 font-medium mt-1 block">
+              <span className="text-xs text-[#2B2644] font-medium mt-1 block">
                 Target: Idli / Dosa Sambar
               </span>
             </div>
-            <div className="w-12 h-12 rounded-full bg-[#E9ECF6] flex items-center justify-center text-[#2B2644]">
+            <div className="w-12 h-12 rounded-full bg-[#F0F2FA] flex items-center justify-center text-[#2B2644]">
               <Coffee className="w-6 h-6" />
             </div>
           </Card>
@@ -118,11 +118,11 @@ export default function AdminMess() {
                 Lunch Prep
               </span>
               <div className="text-4xl font-extrabold text-[#2B2644]">{tomorrowLunch}</div>
-              <span className="text-xs text-emerald-600 font-medium mt-1 block">
+              <span className="text-xs text-[#2B2644] font-medium mt-1 block">
                 Target: Biriyani / Meals
               </span>
             </div>
-            <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full bg-[#F0F2FA] text-[#2B2644] flex items-center justify-center">
               <Utensils className="w-6 h-6" />
             </div>
           </Card>
@@ -133,24 +133,24 @@ export default function AdminMess() {
                 Dinner Prep
               </span>
               <div className="text-4xl font-extrabold text-[#11101D]">{tomorrowDinner}</div>
-              <span className="text-xs text-emerald-600 font-medium mt-1 block">
+              <span className="text-xs text-[#2B2644] font-medium mt-1 block">
                 Target: Chapati & Dal
               </span>
             </div>
-            <div className="w-12 h-12 rounded-full bg-purple-50 text-[#2B2644] flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full bg-[#F0F2FA] text-[#2B2644] flex items-center justify-center">
               <Utensils className="w-6 h-6" />
             </div>
           </Card>
         </div>
       </div>
 
-      {/* 7-Day Booked vs Served Bar Chart & Waste Reduction KPI */}
+      {/* 7-Day Booked vs Served Bar Chart & Estimated Food Saved (kg) Metric */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
         <Card variant="elevated" className="lg:col-span-2 p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-bold text-[#141320]">7-Day Cooking Efficiency</h3>
-              <p className="text-xs text-[#64677A]">Booked vs served meal totals over time</p>
+              <h3 className="text-sm font-bold text-[#141320]">7-Day Booked vs. Actual Headcount</h3>
+              <p className="text-xs text-[#64677A]">Daily headcount accuracy styled strictly in institutional palette</p>
             </div>
             <Badge variant="purple">Efficiency 95.8%</Badge>
           </div>
@@ -162,33 +162,50 @@ export default function AdminMess() {
                 <XAxis dataKey="day" tick={{ fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 11 }} />
                 <RechartsTooltip />
-                <Bar dataKey="booked" fill="#2B2644" radius={[6, 6, 0, 0]} name="Booked" />
-                <Bar dataKey="served" fill="#C5CBE8" radius={[6, 6, 0, 0]} name="Served" />
+                <Bar dataKey="booked" fill="#2B2644" radius={[6, 6, 0, 0]} name="Booked Headcount" />
+                <Bar dataKey="served" fill="#C5CBE8" radius={[6, 6, 0, 0]} name="Actual Served" />
               </BarChart>
             </ResponsiveContainer>
           </div>
+
+          <div className="flex items-center justify-center gap-6 mt-3 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-[3px] bg-[#2B2644]" />
+              <span className="text-[#64677A]">Booked Headcount</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-[3px] bg-[#C5CBE8]" />
+              <span className="text-[#64677A]">Actual Served</span>
+            </div>
+          </div>
         </Card>
 
-        {/* Waste Reduction KPI Card */}
-        <Card variant="dark" className="p-6 flex flex-col justify-between">
+        {/* Estimated Food Saved (kg) Metric Card */}
+        <Card variant="dark" className="p-6 flex flex-col justify-between bg-[#2B2644] text-white">
           <div>
             <span className="text-xs text-[#C9C7DA] uppercase font-bold tracking-wider block mb-2">
-              Food Waste KPI
+              Estimated Food Saved
             </span>
-            <div className="text-4xl font-extrabold text-emerald-400">92.4%</div>
-            <p className="text-xs text-[#C9C7DA] mt-2 leading-relaxed">
-              Waste reduction achieved compared to historical paper-based mess estimation.
+            <div className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+              342 <span className="text-lg font-normal text-[#C5CBE8]">kg</span>
+            </div>
+            <p className="text-xs text-[#C9C7DA] mt-3 leading-relaxed">
+              Advance 8:00 PM lockouts eliminated un-eaten batch waste across breakfast, lunch, and dinner.
             </p>
           </div>
 
-          <div className="pt-4 border-t border-white/10 space-y-2 text-xs text-[#C9C7DA]">
-            <div className="flex justify-between">
+          <div className="pt-4 border-t border-white/10 space-y-2.5 text-xs text-[#C9C7DA]">
+            <div className="flex justify-between items-center">
               <span>Uncollected Food:</span>
-              <span className="text-white font-semibold">&lt; 5%</span>
+              <span className="text-white font-semibold">&lt; 4.2%</span>
             </div>
-            <div className="flex justify-between">
-              <span>Savings this month:</span>
+            <div className="flex justify-between items-center">
+              <span>Monthly Kitchen Savings:</span>
               <span className="text-white font-semibold">₹18,450</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span>Meals Scheduled Ahead:</span>
+              <span className="text-[#C5CBE8] font-semibold">1,480 meals</span>
             </div>
           </div>
         </Card>

@@ -28,6 +28,7 @@ import { Button } from '@/components/ui/Button'
 import { Modal } from '@/components/ui/Modal'
 import { useToast } from '@/components/ui/Toast'
 import { CollegeLogo } from '@/components/ui/CollegeLogo'
+import { playSuccessChime } from '@/lib/sound'
 
 export default function AdminGate() {
   const {
@@ -54,6 +55,8 @@ export default function AdminGate() {
   const [scannedStudentId, setScannedStudentId] = useState<string>(students[0]?.id || '')
   const selectedStudent = students.find((s) => s.id === scannedStudentId) || students[0]
   const studentActiveLog = gateLogs.find((l) => l.studentId === selectedStudent?.id && l.exitTime === null)
+
+  const [scanFeedback, setScanFeedback] = useState<{ title: string; subtitle: string } | null>(null)
 
   const [scanPurpose, setScanPurpose] = useState('Lab')
   const [scanDestination, setScanDestination] = useState('Computing Cluster')
@@ -144,6 +147,12 @@ export default function AdminGate() {
       activeGateName,
       'guard_scanned_student'
     )
+    playSuccessChime()
+    setScanFeedback({
+      title: 'Turnstile Entry Authorized',
+      subtitle: `${selectedStudent.name} entered through ${activeGateName}`,
+    })
+    setTimeout(() => setScanFeedback(null), 3000)
     success(`Entry approved: ${selectedStudent.name} at ${activeGateName}`)
   }
 
@@ -154,6 +163,12 @@ export default function AdminGate() {
       return
     }
     logExit(studentActiveLog.id)
+    playSuccessChime()
+    setScanFeedback({
+      title: 'Turnstile Exit Cleared',
+      subtitle: `${selectedStudent.name} checked out from ${studentActiveLog.destination}`,
+    })
+    setTimeout(() => setScanFeedback(null), 3000)
     success(`Exit approved: ${selectedStudent.name}. Log closed.`)
   }
 
@@ -375,6 +390,24 @@ export default function AdminGate() {
               </div>
               <Badge variant="purple">Guard Mode</Badge>
             </div>
+
+            {/* Scan Success Feedback Alert */}
+            {scanFeedback && (
+              <div className="p-3.5 rounded-[16px] bg-[#EEF6F3] border border-[#1E6B52]/20 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-[#1E6B52] text-white flex items-center justify-center shrink-0">
+                    <Check className="w-4 h-4 stroke-[2.5]" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-[#141320]">{scanFeedback.title}</h4>
+                    <p className="text-[11px] text-[#1E6B52] font-medium">{scanFeedback.subtitle}</p>
+                  </div>
+                </div>
+                <span className="text-[10px] uppercase font-bold text-[#1E6B52] bg-white px-2 py-0.5 rounded-full border border-[#1E6B52]/20">
+                  Cleared
+                </span>
+              </div>
+            )}
 
             {/* Student Selector to Simulate Scan */}
             <div className="space-y-3">

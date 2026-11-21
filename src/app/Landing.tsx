@@ -388,8 +388,8 @@ export default function Landing() {
             </p>
             <div className="flex justify-center gap-4 pt-2">
               <Link
-                to="/app"
-                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-[#11101D] text-white font-medium hover:bg-[#2B2644] shadow-md active:scale-[0.98] transition-all"
+                to="/app?tour=1"
+                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-[#11101D] text-white font-medium hover:bg-[#2B2644] shadow-md active:scale-[0.98] transition-all cursor-pointer"
               >
                 <span>Start 5-Minute Walkthrough</span>
                 <ArrowRight className="w-4 h-4" />

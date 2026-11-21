@@ -257,36 +257,85 @@ export const useStore = create<AppState>()(
       // ─── Gate ───
       logEntry: (studentId, purpose, destination, isAfterHours = false, gateName = 'Main Gate 1', scanType = 'student_scanned_gate') => {
         const student = get().students.find(s => s.id === studentId)!
-        set(s => ({
-          gateLogs: [{
+        const studentName = student ? student.name : 'Unknown Scholar'
+        const department = student ? student.department : 'General'
+        const newLog: GateLog = {
+          id: id(),
+          studentId,
+          studentName,
+          department,
+          entryTime: Date.now(),
+          exitTime: null,
+          purpose,
+          destination,
+          isAfterHours,
+          gateName,
+          scanType,
+        }
+
+        const newNotifications = [...get().notifications]
+        if (isAfterHours) {
+          newNotifications.unshift({
             id: id(),
-            studentId,
-            studentName: student ? student.name : 'Unknown Scholar',
-            department: student ? student.department : 'General',
-            entryTime: Date.now(),
-            exitTime: null,
-            purpose,
-            destination,
-            isAfterHours,
-            gateName,
-            scanType,
-          }, ...s.gateLogs],
+            title: `After-Hours Alert: ${studentName}`,
+            message: `Late campus entry recorded at ${gateName} (${purpose} — ${destination}). Flagged for Warden review.`,
+            type: 'alert' as const,
+            read: false,
+            createdAt: Date.now(),
+            link: '/app/warden',
+          })
+        }
+
+        set(s => ({
+          gateLogs: [newLog, ...s.gateLogs],
+          notifications: newNotifications,
         }))
       },
 
-      logExit: (logId) => set(s => ({
-        gateLogs: s.gateLogs.map(l =>
+      logExit: (logId) => set(s => {
+        const log = s.gateLogs.find(l => l.id === logId)
+        const updatedLogs = s.gateLogs.map(l =>
           l.id === logId ? { ...l, exitTime: Date.now() } : l
-        ),
-      })),
+        )
+        const newNotifications = [...s.notifications]
+        if (log && log.isAfterHours) {
+          newNotifications.unshift({
+            id: id(),
+            title: `After-Hours Departure: ${log.studentName}`,
+            message: `Scholar checked out from ${log.destination} via ${log.gateName || 'Main Gate 1'}.`,
+            type: 'alert' as const,
+            read: false,
+            createdAt: Date.now(),
+            link: '/app/warden',
+          })
+        }
+        return {
+          gateLogs: updatedLogs,
+          notifications: newNotifications,
+        }
+      }),
 
       logExitForStudent: (studentId) => set(s => {
         const active = s.gateLogs.find(l => l.studentId === studentId && l.exitTime === null)
         if (!active) return s
+        const updatedLogs = s.gateLogs.map(l =>
+          l.id === active.id ? { ...l, exitTime: Date.now() } : l
+        )
+        const newNotifications = [...s.notifications]
+        if (active.isAfterHours) {
+          newNotifications.unshift({
+            id: id(),
+            title: `After-Hours Departure: ${active.studentName}`,
+            message: `Scholar checked out from ${active.destination} via ${active.gateName || 'Main Gate 1'}.`,
+            type: 'alert' as const,
+            read: false,
+            createdAt: Date.now(),
+            link: '/app/warden',
+          })
+        }
         return {
-          gateLogs: s.gateLogs.map(l =>
-            l.id === active.id ? { ...l, exitTime: Date.now() } : l
-          ),
+          gateLogs: updatedLogs,
+          notifications: newNotifications,
         }
       }),
 

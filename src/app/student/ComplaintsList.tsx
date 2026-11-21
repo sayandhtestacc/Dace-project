@@ -14,6 +14,7 @@ import {
   AlertCircle,
   CheckCircle,
   EyeOff,
+  Printer,
 } from 'lucide-react'
 import { useStore } from '@/data/store'
 import type { ComplaintCategory, ComplaintStatus } from '@/data/types'
@@ -91,11 +92,21 @@ export default function ComplaintsList() {
           </p>
         </div>
 
-        <Link to="/app/complaints/new">
-          <Button variant="primary" size="md" iconLeft={<Plus className="w-4 h-4" />}>
-            File New Complaint
+        <div className="flex items-center gap-2.5">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => window.print()}
+            iconLeft={<Printer className="w-4 h-4" />}
+          >
+            Print Docket
           </Button>
-        </Link>
+          <Link to="/app/complaints/new">
+            <Button variant="primary" size="md" iconLeft={<Plus className="w-4 h-4" />}>
+              File New Complaint
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Control Bar: Tabs, Search, Sort, View Toggle */}

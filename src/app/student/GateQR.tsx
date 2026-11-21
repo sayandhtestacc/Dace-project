@@ -15,14 +15,20 @@ import {
   AlertTriangle,
   Sparkles,
   Compass,
+  PhoneCall,
+  Phone,
+  Check,
+  Copy,
 } from 'lucide-react'
 import { useStore } from '@/data/store'
 import { generateQRMatrix, renderQRToSVG } from '@/lib/qr'
 import { formatDuration, relativeTime } from '@/lib/format'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
+import { Modal } from '@/components/ui/Modal'
 import { useToast } from '@/components/ui/Toast'
 import { CollegeLogo } from '@/components/ui/CollegeLogo'
+import { playSuccessChime } from '@/lib/sound'
 
 export default function GateQR() {
   const {
@@ -56,6 +62,17 @@ export default function GateQR() {
   // Purpose & Destination Form
   const [purpose, setPurpose] = useState<string>('Lab')
   const [destination, setDestination] = useState<string>('Main Academic Block')
+
+  // Emergency SOS Modal
+  const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false)
+  const [copiedEmergency, setCopiedEmergency] = useState<string | null>(null)
+
+  // Animated Scan Success Feedback Card
+  const [scanSuccessFeedback, setScanSuccessFeedback] = useState<{
+    active: boolean
+    title: string
+    subtitle: string
+  } | null>(null)
 
   // After-hours detection & input
   const currentHour = new Date().getHours()
@@ -127,6 +144,13 @@ export default function GateQR() {
 
   const handleLogEntry = () => {
     logEntry(currentStudent.id, purpose, destination, isAfterHours, activeGateName, 'guard_scanned_student')
+    playSuccessChime()
+    setScanSuccessFeedback({
+      active: true,
+      title: 'Gate Entry Recorded',
+      subtitle: `${purpose} at ${destination} (${activeGateName})`,
+    })
+    setTimeout(() => setScanSuccessFeedback(null), 3000)
     success(`Gate entry recorded: ${purpose} at ${destination}`)
   }
 
@@ -134,6 +158,13 @@ export default function GateQR() {
     if (activeLog) {
       logExit(activeLog.id)
       setIsFlipped(false)
+      playSuccessChime()
+      setScanSuccessFeedback({
+        active: true,
+        title: 'Gate Exit Cleared',
+        subtitle: `Total stay logged: ${formatDuration(Date.now() - activeLog.entryTime)}`,
+      })
+      setTimeout(() => setScanSuccessFeedback(null), 3000)
       success(`Gate exit logged. Total visit: ${formatDuration(Date.now() - activeLog.entryTime)}`)
     }
   }
@@ -146,6 +177,13 @@ export default function GateQR() {
       const p = late ? 'After-Hours Research' : purpose
       const d = destination || 'Main Campus'
       logEntry(currentStudent.id, p, d, late || isAfterHours, activeGateName, 'student_scanned_gate')
+      playSuccessChime()
+      setScanSuccessFeedback({
+        active: true,
+        title: `Gate Turnstile Cleared (${activeGateName})`,
+        subtitle: late ? 'After-Hours alert forwarded to Warden Desk' : 'Verified instant scholar entry',
+      })
+      setTimeout(() => setScanSuccessFeedback(null), 3000)
       success(`Scanned ${activeGateName} QR: Entry logged ${late ? '(After-Hours Notice)' : ''}`)
     }, 700)
   }
@@ -159,8 +197,22 @@ export default function GateQR() {
     setTimeout(() => {
       setIsScanning(false)
       logExitForStudent(currentStudent.id)
+      playSuccessChime()
+      setScanSuccessFeedback({
+        active: true,
+        title: `Gate Departure Cleared (${activeGateName})`,
+        subtitle: `Total visit: ${formatDuration(elapsedMs)} recorded`,
+      })
+      setTimeout(() => setScanSuccessFeedback(null), 3000)
       success(`Scanned ${activeGateName} Exit QR: Check-out recorded. Total: ${formatDuration(elapsedMs)}`)
     }, 700)
+  }
+
+  const handleCopyEmergencyNumber = (num: string, label: string) => {
+    navigator.clipboard.writeText(num)
+    setCopiedEmergency(num)
+    setTimeout(() => setCopiedEmergency(null), 2000)
+    info(`Copied ${label} number`)
   }
 
   // Circular ring countdown SVG calculation
@@ -185,6 +237,15 @@ export default function GateQR() {
         </div>
 
         <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsEmergencyModalOpen(true)}
+            className="border-red-200 text-red-700 hover:bg-red-50"
+            iconLeft={<PhoneCall className="w-3.5 h-3.5 text-red-600" />}
+          >
+            Campus Emergency
+          </Button>
           <Link to="/app/gate/history">
             <Button variant="outline" size="sm" iconLeft={<History className="w-3.5 h-3.5" />}>
               Visit History
@@ -192,6 +253,31 @@ export default function GateQR() {
           </Link>
         </div>
       </div>
+
+      {/* Animated Scan Confirmation Feedback Card */}
+      <AnimatePresence>
+        {scanSuccessFeedback && (
+          <motion.div
+            initial={{ opacity: 0, y: -12, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -12, scale: 0.96 }}
+            className="p-4 rounded-[20px] bg-[#EEF6F3] border border-[#1E6B52]/20 flex items-center justify-between gap-4 shadow-sm"
+          >
+            <div className="flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-full bg-[#1E6B52] text-white flex items-center justify-center shrink-0 shadow-xs">
+                <Check className="w-5 h-5 stroke-[2.5]" />
+              </div>
+              <div>
+                <h4 className="text-xs font-bold text-[#141320]">{scanSuccessFeedback.title}</h4>
+                <p className="text-[11px] text-[#1E6B52] font-medium mt-0.5">{scanSuccessFeedback.subtitle}</p>
+              </div>
+            </div>
+            <span className="text-[10px] uppercase font-bold text-[#1E6B52] bg-white px-2.5 py-1 rounded-full border border-[#1E6B52]/20">
+              Verified
+            </span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Segmented Dual-Mode Pill Toggle */}
       <div className="flex justify-center">
@@ -563,6 +649,72 @@ export default function GateQR() {
           </div>
         </div>
       )}
+      {/* CAMPUS EMERGENCY QUICK-ACTION MODAL */}
+      <Modal
+        isOpen={isEmergencyModalOpen}
+        onClose={() => setIsEmergencyModalOpen(false)}
+        title="Campus Emergency Contacts & Help Desk"
+        description="24x7 Digital University Kerala security dispatch and medical assistance."
+      >
+        <div className="space-y-3.5 py-2">
+          {[
+            {
+              role: 'Main Security Control Room',
+              number: '0471-2788000',
+              desc: 'Gate barrier emergency, turnstile access override, 24/7 patrol dispatch',
+            },
+            {
+              role: 'Chief Hostel Warden',
+              number: '0471-2788112',
+              desc: 'Late-night residential check-in permission, hostel welfare, emergencies',
+            },
+            {
+              role: 'Campus Medical Desk / Ambulance',
+              number: '0471-2788999',
+              desc: 'First aid clinic, emergency campus transport, on-duty nurse',
+            },
+            {
+              role: 'Kerala Police / Women Helpline',
+              number: '1091',
+              desc: '24/7 quick-response transit safety and external emergency services',
+            },
+          ].map((c) => (
+            <div
+              key={c.role}
+              className="p-3.5 rounded-[16px] bg-[#F5F6FA] border border-[#2B2644]/8 flex items-center justify-between gap-3"
+            >
+              <div>
+                <h4 className="text-xs font-bold text-[#141320]">{c.role}</h4>
+                <p className="text-[11px] text-[#64677A] mt-0.5">{c.desc}</p>
+                <span className="text-xs font-mono font-bold text-[#2B2644] mt-1 block">
+                  {c.number}
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <a
+                  href={`tel:${c.number}`}
+                  className="p-2 rounded-full bg-white border border-[#2B2644]/12 text-[#2B2644] hover:bg-[#2B2644] hover:text-white transition-colors"
+                  title="Call"
+                >
+                  <Phone className="w-3.5 h-3.5" />
+                </a>
+                <button
+                  onClick={() => handleCopyEmergencyNumber(c.number, c.role)}
+                  className="px-2.5 py-1.5 rounded-full text-[10px] font-semibold bg-white border border-[#2B2644]/12 text-[#2B2644] hover:bg-[#F5F6FA] transition-colors cursor-pointer"
+                >
+                  {copiedEmergency === c.number ? 'Copied' : 'Copy'}
+                </button>
+              </div>
+            </div>
+          ))}
+
+          <div className="pt-2 flex justify-end">
+            <Button variant="secondary" size="sm" onClick={() => setIsEmergencyModalOpen(false)}>
+              Close Desk
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

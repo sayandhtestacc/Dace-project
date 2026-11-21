@@ -12,6 +12,7 @@ import {
   CheckCircle2,
   Receipt,
   ArrowRight,
+  Printer,
 } from 'lucide-react'
 import { useStore } from '@/data/store'
 import { formatINR, relativeTime } from '@/lib/format'
@@ -37,12 +38,30 @@ export default function MessWallet() {
     success(`Successfully added ${formatINR(amt)} to Mess Wallet!`)
   }
 
+  const handlePrintStatement = () => {
+    window.print()
+  }
+
   const quickAmounts = [200, 500, 1000, 2000]
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 pb-16">
+      {/* Print-Only Formal Statement Header */}
+      <div className="print-only mb-6 border-b border-black/20 pb-4 text-left">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-xl font-bold text-[#141320]">Digital University Kerala</h1>
+            <p className="text-xs text-[#64677A]">Campus Dining & Smart Mess Facility · Statement of Account</p>
+          </div>
+          <div className="text-right text-xs">
+            <span className="font-semibold block">{currentStudent.name} ({currentStudent.department})</span>
+            <span className="text-[#64677A] font-mono">Date: {new Date().toLocaleDateString()}</span>
+          </div>
+        </div>
+      </div>
+
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 no-print">
         <div>
           <span className="text-xs font-bold text-[#64677A] uppercase tracking-wider block mb-1">
             Module B · Internal Ledger
@@ -55,19 +74,29 @@ export default function MessWallet() {
           </p>
         </div>
 
-        <Button
-          variant="primary"
-          size="md"
-          onClick={() => setIsTopUpOpen(true)}
-          iconLeft={<Plus className="w-4 h-4" />}
-        >
-          Top Up Balance
-        </Button>
+        <div className="flex items-center gap-2.5">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={handlePrintStatement}
+            iconLeft={<Printer className="w-4 h-4" />}
+          >
+            Export Statement
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => setIsTopUpOpen(true)}
+            iconLeft={<Plus className="w-4 h-4" />}
+          >
+            Top Up Balance
+          </Button>
+        </div>
       </div>
 
       {/* Low Balance Warning Banner */}
       {currentStudent.walletBalance < 100 && (
-        <div className="p-4 rounded-[20px] bg-amber-50 border border-amber-200 text-amber-800 flex items-center justify-between">
+        <div className="p-4 rounded-[20px] bg-amber-50 border border-amber-200 text-amber-800 flex items-center justify-between no-print">
           <div className="flex items-center gap-3">
             <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />
             <div>
