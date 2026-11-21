@@ -13,8 +13,10 @@ import {
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { CollegeLogo } from '@/components/ui/CollegeLogo'
+import { useStore } from '@/data/store'
 
 export default function Landing() {
+  const { isAuthenticated } = useStore()
   return (
     <div className="min-h-screen bg-[#F5F6FA] text-[#141320] overflow-x-hidden">
       {/* ─── HERO SECTION (pt-6 pb-16) ─── */}
@@ -69,18 +71,18 @@ export default function Landing() {
                 className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4"
               >
                 <Link
-                  to="/app"
+                  to={isAuthenticated ? '/app' : '/login'}
                   className="inline-flex items-center gap-2.5 px-7 py-3.5 text-sm sm:text-base font-semibold rounded-full bg-[#11101D] text-white hover:bg-[#2B2644] active:scale-[0.98] transition-all shadow-[0_12px_32px_rgba(17,16,29,0.25)] group cursor-pointer"
                 >
-                  <span>Launch the demo</span>
+                  <span>{isAuthenticated ? 'Open Campus Portal' : 'Sign In to Portal'}</span>
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </Link>
-                <Link
-                  to="/login"
+                <a
+                  href="#modules"
                   className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold rounded-full bg-white/80 hover:bg-white text-[#141320] border border-[#2B2644]/12 active:scale-[0.98] transition-all shadow-xs"
                 >
-                  <span>Role Switcher</span>
-                </Link>
+                  <span>Explore Modules</span>
+                </a>
               </motion.div>
             </div>
           </div>
@@ -100,7 +102,7 @@ export default function Landing() {
                 Rethinking daily friction points for 1,200+ residential scholars.
               </h2>
               <Link
-                to="/app"
+                to={isAuthenticated ? '/app' : '/login'}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#2B2644] text-white text-sm font-medium hover:bg-[#11101D] active:scale-[0.98] transition-all mt-6 shadow-sm"
               >
                 <span>Explore Interactive Modules</span>
@@ -142,7 +144,7 @@ export default function Landing() {
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
             {/* Card 1: Wide Left (spans 2 cols) */}
-            <Link to="/app/complaints" className="lg:col-span-2 block group">
+            <Link to={isAuthenticated ? '/app/complaints' : '/login'} className="lg:col-span-2 block group">
               <Card
                 variant="gradient"
                 tilt
@@ -170,7 +172,7 @@ export default function Landing() {
             </Link>
 
             {/* Card 2: Middle (1 col) */}
-            <Link to="/app/mess" className="lg:col-span-1 block group">
+            <Link to={isAuthenticated ? '/app/mess' : '/login'} className="lg:col-span-1 block group">
               <Card
                 variant="dark"
                 spotlight
@@ -200,7 +202,7 @@ export default function Landing() {
             </Link>
 
             {/* Card 3: Right (1 col) */}
-            <Link to="/app/qr" className="lg:col-span-1 block group">
+            <Link to={isAuthenticated ? '/app/qr' : '/login'} className="lg:col-span-1 block group">
               <Card
                 variant="dark"
                 spotlight
@@ -301,7 +303,7 @@ export default function Landing() {
                     </p>
                   </div>
                   <Link
-                    to="/admin"
+                    to={isAuthenticated ? '/admin' : '/login'}
                     className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#2B2644] hover:underline"
                   >
                     <span>Admin View</span>
@@ -386,10 +388,10 @@ export default function Landing() {
             </p>
             <div className="flex justify-center gap-4 pt-2">
               <Link
-                to="/app?tour=1"
+                to={isAuthenticated ? '/app' : '/login'}
                 className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-[#11101D] text-white font-medium hover:bg-[#2B2644] shadow-md active:scale-[0.98] transition-all cursor-pointer"
               >
-                <span>Start 5-Minute Walkthrough</span>
+                <span>{isAuthenticated ? 'Open Campus Portal' : 'Sign In to Portal'}</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, Command, ArrowRight, Shield } from 'lucide-react'
+import { Menu, X, Command, ArrowRight, Shield, LogOut } from 'lucide-react'
 import { NotificationCenter } from '@/components/ui/NotificationCenter'
 import { CollegeLogo } from '@/components/ui/CollegeLogo'
 import { useStore } from '@/data/store'
@@ -10,8 +10,9 @@ export const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
-  const { currentRole } = useStore()
+  const { currentRole, isAuthenticated, logoutUser, currentStudentId, students } = useStore()
 
+  const currentStudent = students.find((s) => s.id === currentStudentId) || students[0]
   const isAppPortal = location.pathname.startsWith('/app') || location.pathname.startsWith('/admin')
 
   const navLinks = [
@@ -19,7 +20,7 @@ export const Navbar: React.FC = () => {
     { label: 'Modules', href: '#modules' },
     { label: 'Impact', href: '#impact' },
     { label: 'Privacy', href: '/privacy' },
-    { label: 'App Portal', href: '/app' },
+    { label: 'App Portal', href: isAuthenticated ? '/app' : '/login' },
   ]
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -115,22 +116,37 @@ export const Navbar: React.FC = () => {
             </kbd>
           </button>
 
-          {/* Open Demo dark pill: bg-[#2B2644] text-white px-5 py-2.5 rounded-full */}
-          {!isAppPortal ? (
-            <Link
-              to="/app"
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-xs sm:text-sm font-medium rounded-full bg-[#2B2644] text-white hover:bg-[#11101D] active:scale-[0.98] transition-all shadow-sm"
-            >
-              <span>Open Demo</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
+          {/* Authentication & Portal Buttons */}
+          {isAuthenticated ? (
+            <div className="flex items-center gap-2">
+              {!isAppPortal && (
+                <Link
+                  to="/app"
+                  className="inline-flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-full bg-[#2B2644] text-white hover:bg-[#11101D] active:scale-[0.98] transition-all shadow-sm"
+                >
+                  <span>Portal</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              )}
+              <button
+                onClick={() => {
+                  logoutUser()
+                  navigate('/login')
+                }}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium rounded-full border border-[#2B2644]/15 bg-white text-[#2B2644] hover:bg-red-50 hover:text-red-700 hover:border-red-200 transition-all shadow-xs cursor-pointer"
+                title="Sign Out of DUK Hub"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Sign Out</span>
+              </button>
+            </div>
           ) : (
             <Link
               to="/login"
-              className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium rounded-full border border-[#2B2644]/15 bg-white text-[#2B2644] hover:bg-[#2B2644] hover:text-white transition-all shadow-xs"
+              className="inline-flex items-center gap-2 px-5 py-2.5 text-xs sm:text-sm font-medium rounded-full bg-[#2B2644] text-white hover:bg-[#11101D] active:scale-[0.98] transition-all shadow-sm"
             >
-              <Shield className="w-3.5 h-3.5" />
-              <span>Persona</span>
+              <span>Sign In</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           )}
 
@@ -168,20 +184,35 @@ export const Navbar: React.FC = () => {
                 </a>
               ))}
               <div className="pt-2 flex flex-col gap-2">
-                <Link
-                  to="/login"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="w-full text-center py-2.5 text-xs font-medium rounded-full border border-[#2B2644]/15 text-[#141320]"
-                >
-                  Switch Role / Login
-                </Link>
-                <Link
-                  to="/app"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="w-full text-center py-2.5 text-xs font-medium rounded-full bg-[#2B2644] text-white"
-                >
-                  Open Demo Portal
-                </Link>
+                {isAuthenticated ? (
+                  <>
+                    <Link
+                      to="/app"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="w-full text-center py-2.5 text-xs font-medium rounded-full bg-[#2B2644] text-white"
+                    >
+                      Open Campus Portal
+                    </Link>
+                    <button
+                      onClick={() => {
+                        setIsMobileMenuOpen(false)
+                        logoutUser()
+                        navigate('/login')
+                      }}
+                      className="w-full text-center py-2.5 text-xs font-medium rounded-full border border-red-200 text-red-700 bg-red-50 cursor-pointer"
+                    >
+                      Sign Out
+                    </button>
+                  </>
+                ) : (
+                  <Link
+                    to="/login"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full text-center py-2.5 text-xs font-medium rounded-full bg-[#2B2644] text-white"
+                  >
+                    Sign In to Portal
+                  </Link>
+                )}
               </div>
             </div>
           </motion.div>

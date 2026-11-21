@@ -12,7 +12,9 @@ import { createSeedData, type SeedData } from './seed'
 import { generateRefId, getInitials } from '../lib/format'
 
 interface AppState extends SeedData {
-  // ─── Role & Students ───
+  // ─── Authentication, Role & Students ───
+  loginUser: (role: UserRole, studentId?: string) => void
+  logoutUser: () => void
   switchRole: (role: UserRole) => void
   switchStudent: (studentId: string) => void
   addStudent: (s: Omit<Student, 'id' | 'qrToken' | 'avatarInitials'>) => string
@@ -85,7 +87,15 @@ export const useStore = create<AppState>()(
             .toUpperCase()}`,
         }),
 
-      // ─── Role & Students ───
+      // ─── Authentication, Role & Students ───
+      loginUser: (role, studentId) =>
+        set((state) => ({
+          isAuthenticated: true,
+          currentRole: role,
+          currentStudentId:
+            studentId || (role === 'student' ? state.currentStudentId || 'stu-01' : state.currentStudentId),
+        })),
+      logoutUser: () => set({ isAuthenticated: false }),
       switchRole: (role) => set({ currentRole: role }),
       switchStudent: (studentId) => set({ currentStudentId: studentId }),
       addStudent: (s) => {

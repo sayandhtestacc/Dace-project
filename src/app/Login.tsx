@@ -26,7 +26,7 @@ import { DUK_SCHOOLS, parseDukEmail, generateDukEmail, type DukSchool } from '@/
 
 export default function Login() {
   const navigate = useNavigate()
-  const { currentRole, currentStudentId, switchRole, switchStudent, students, addStudent } = useStore()
+  const { currentRole, currentStudentId, switchRole, switchStudent, students, addStudent, loginUser } = useStore()
   const { success, warning } = useToast()
 
   const [activeTab, setActiveTab] = useState<'email' | 'personas' | 'register'>('email')
@@ -93,10 +93,7 @@ export default function Login() {
   ]
 
   const handleEnterRole = () => {
-    switchRole(selectedRole)
-    if (selectedRole === 'student') {
-      switchStudent(selectedStudent)
-    }
+    loginUser(selectedRole, selectedRole === 'student' ? selectedStudent : undefined)
     const targetObj = roles.find((r) => r.id === selectedRole)
     success(`Entered as ${targetObj?.title}`)
     navigate(targetObj?.dest || '/app')
@@ -114,8 +111,7 @@ export default function Login() {
     )
 
     if (existing) {
-      switchRole('student')
-      switchStudent(existing.id)
+      loginUser('student', existing.id)
       success(`Authenticated as ${existing.name} (${existing.department})`)
       navigate('/app')
     } else {
@@ -141,8 +137,7 @@ export default function Login() {
         hostelBlock: 'Nila Hostel Block A',
         rollNo: `DUK/${parsedEmail.batchYear}/${parsedEmail.schoolCode}/${Math.floor(10 + Math.random() * 89)}`,
       })
-      switchRole('student')
-      switchStudent(newId)
+      loginUser('student', newId)
       success(`Welcome to DUK Hub, ${parsedEmail.nameGuess}!`)
       navigate('/app')
     }
@@ -175,8 +170,7 @@ export default function Login() {
       rollNo: `DUK/2025/${schoolObj.code}/${Math.floor(100 + Math.random() * 899)}`,
     })
 
-    switchRole('student')
-    switchStudent(newId)
+    loginUser('student', newId)
     success(`Account created for ${regName} (${genEmail})`)
     navigate('/app')
   }

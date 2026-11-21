@@ -29,7 +29,7 @@ import { CollegeLogo } from '@/components/ui/CollegeLogo'
 import { DUK_SCHOOLS, type DukSchool } from '@/data/dukAcademics'
 
 export default function Profile() {
-  const { currentStudentId, students, resetDemoData, switchStudent, updateStudentProfile } = useStore()
+  const { currentStudentId, students, resetDemoData, updateStudentProfile } = useStore()
   const { success, info } = useToast()
 
   const currentStudent = students.find((s) => s.id === currentStudentId) || students[0]
@@ -433,31 +433,6 @@ export default function Profile() {
                 </Button>
               </div>
             </form>
-
-            {/* Switch Student Identity selector */}
-            <div className="pt-6 border-t border-[#2B2644]/8 space-y-3">
-              <div className="flex items-center justify-between">
-                <h4 className="text-sm font-bold text-[#141320]">Switch Student Persona</h4>
-                <Badge variant="purple">{students.length} Seeded Scholars</Badge>
-              </div>
-              <p className="text-xs text-[#64677A]">
-                Select any registered scholar across the 5 DUK schools to inspect their personalized complaints, wallet balance, and gate activity.
-              </p>
-              <select
-                value={currentStudentId}
-                onChange={(e) => {
-                  switchStudent(e.target.value)
-                  info(`Switched student persona`)
-                }}
-                className="w-full text-xs sm:text-sm px-4 py-3 rounded-xl bg-[#F5F6FA] border border-[#2B2644]/12 text-[#141320] outline-none font-medium"
-              >
-                {students.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.name} — {s.school || 'SoCSE'} · {s.course || s.department} (₹{s.walletBalance})
-                  </option>
-                ))}
-              </select>
-            </div>
 
             {/* Reset All Demo Data button */}
             <div className="pt-6 border-t border-[#2B2644]/8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">

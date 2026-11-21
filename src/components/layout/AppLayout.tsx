@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useLocation, Outlet } from 'react-router-dom'
+import { Link, useLocation, Outlet, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard,
@@ -12,6 +12,7 @@ import {
   History,
   X,
   Users,
+  LogOut,
 } from 'lucide-react'
 import { useStore } from '@/data/store'
 import { CollegeLogo } from '@/components/ui/CollegeLogo'
@@ -20,7 +21,15 @@ export const AppLayout: React.FC = () => {
   const [showBanner, setShowBanner] = useState(true)
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false)
   const location = useLocation()
-  const { currentRole, currentStudentId, students } = useStore()
+  const navigate = useNavigate()
+  const { currentRole, currentStudentId, students, isAuthenticated, logoutUser } = useStore()
+
+  // Authentication Guard: Ensure user is logged in before accessing portal
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login', { replace: true })
+    }
+  }, [isAuthenticated, navigate])
 
   const currentStudent = students.find((s) => s.id === currentStudentId) || students[0]
 
@@ -44,21 +53,18 @@ export const AppLayout: React.FC = () => {
           { label: 'Headcount Desk', path: '/app/mess-manager', icon: Utensils },
           { label: 'Weekly Menu', path: '/app/mess', icon: Calendar },
           { label: 'Bookings History', path: '/app/mess/history', icon: History },
-          { label: 'Switch Persona', path: '/login', icon: Shield },
         ]
       case 'admin':
         return [
           { label: 'Department Queue', path: '/app/admin', icon: AlertCircle },
           { label: 'Warden Escalations', path: '/app/warden/complaints', icon: Shield },
           { label: 'Gate Access Audit', path: '/app/security', icon: Users },
-          { label: 'Student Directory', path: '/app/profile', icon: User },
         ]
       case 'security':
         return [
           { label: 'Live Gate Console', path: '/app/security', icon: Shield },
           { label: 'On-Campus Roster', path: '/admin/gate', icon: Users },
           { label: 'Visit History Logs', path: '/app/gate/history', icon: History },
-          { label: 'Switch Persona', path: '/login', icon: User },
         ]
       case 'warden':
         return [
@@ -172,18 +178,21 @@ export const AppLayout: React.FC = () => {
 
           {/* Footer Card */}
           <div className="pt-4 border-t border-[#2B2644]/8 space-y-3">
-            <Link
-              to="/login"
-              className="flex items-center justify-between w-full px-3.5 py-2.5 rounded-[14px] text-xs font-medium border border-[#2B2644]/12 bg-[#F5F6FA] text-[#2B2644] hover:bg-[#2B2644] hover:text-white transition-all shadow-2xs"
+            <button
+              onClick={() => {
+                logoutUser()
+                navigate('/login')
+              }}
+              className="flex items-center justify-between w-full px-3.5 py-2.5 rounded-[14px] text-xs font-medium border border-[#2B2644]/12 bg-[#F5F6FA] text-[#2B2644] hover:bg-red-50 hover:text-red-700 hover:border-red-200 transition-all cursor-pointer shadow-2xs"
             >
               <div className="flex items-center gap-2">
-                <Shield className="w-3.5 h-3.5" />
-                <span>Switch Role</span>
+                <LogOut className="w-3.5 h-3.5" />
+                <span>Sign Out</span>
               </div>
-              <span className="text-[10px] uppercase font-bold text-[#2B2644] bg-[#E9ECF6] px-1.5 py-0.5 rounded-md border border-[#2B2644]/15">
+              <span className="text-[10px] uppercase font-bold text-[#64677A] bg-white px-1.5 py-0.5 rounded-md border border-[#2B2644]/10">
                 {roleInfo.badge}
               </span>
-            </Link>
+            </button>
 
             <div className="flex items-center justify-center gap-2 pt-1 opacity-70">
               <CollegeLogo size="xs" />
@@ -248,14 +257,17 @@ export const AppLayout: React.FC = () => {
                 </div>
 
                 <div className="pt-4 border-t border-[#2B2644]/8">
-                  <Link
-                    to="/login"
-                    onClick={() => setIsMobileDrawerOpen(false)}
-                    className="flex items-center justify-center gap-2 w-full py-2.5 rounded-full text-xs font-medium bg-[#11101D] text-white"
+                  <button
+                    onClick={() => {
+                      setIsMobileDrawerOpen(false)
+                      logoutUser()
+                      navigate('/login')
+                    }}
+                    className="flex items-center justify-center gap-2 w-full py-2.5 rounded-full text-xs font-medium bg-[#11101D] text-white hover:bg-red-700 transition-colors cursor-pointer"
                   >
-                    <Shield className="w-3.5 h-3.5" />
-                    <span>Role Switcher Menu</span>
-                  </Link>
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>Sign Out</span>
+                  </button>
                 </div>
               </motion.div>
             </div>

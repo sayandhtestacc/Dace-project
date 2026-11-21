@@ -484,6 +484,7 @@ export function generateVisitors(): Visitor[] {
 export interface SeedData {
   seedVersion: string
   seededAt: number
+  isAuthenticated: boolean
   students: Student[]
   complaints: Complaint[]
   weeklyMenu: DayMenu[]
@@ -500,6 +501,7 @@ export function createSeedData(): SeedData {
   return {
     seedVersion: SEED_VERSION,
     seededAt: Date.now(),
+    isAuthenticated: false,
     students,
     complaints: generateComplaints(),
     weeklyMenu: generateWeeklyMenu(),

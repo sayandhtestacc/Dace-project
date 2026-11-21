@@ -7,9 +7,7 @@ import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { ScrollProgress } from '@/components/layout/ScrollProgress'
 import { BackToTop } from '@/components/layout/BackToTop'
-import { RoleSwitcher } from '@/components/layout/RoleSwitcher'
 import { CommandPalette } from '@/components/layout/CommandPalette'
-import { EvaluatorTour } from '@/components/layout/EvaluatorTour'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Skeleton } from '@/components/ui/Skeleton'
 
@@ -138,8 +136,6 @@ export default function App() {
         </Suspense>
 
         <Footer />
-        <EvaluatorTour />
-        <RoleSwitcher />
         <CommandPalette />
         <BackToTop />
       </ToastProvider>
