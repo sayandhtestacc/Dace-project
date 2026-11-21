@@ -253,7 +253,7 @@ export const AppLayout: React.FC = () => {
         </AnimatePresence>
 
         {/* MAIN CONTENT AREA: flex-1 min-w-0, lg:ml-64, generous padding */}
-        <main className="flex-1 min-w-0 lg:ml-64 p-6 sm:p-8 lg:p-10 max-w-7xl mx-auto w-full">
+        <main className="flex-1 min-w-0 lg:ml-64 px-8 py-8 lg:px-10 lg:py-10 max-w-7xl mx-auto w-full">
           {/* Breadcrumbs Trail */}
           <div className="flex items-center gap-2 text-xs text-[#64677A] mb-6">
             <Link to="/" className="hover:text-[#141320] flex items-center gap-1 font-medium">

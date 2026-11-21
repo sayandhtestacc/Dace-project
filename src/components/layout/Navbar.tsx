@@ -48,6 +48,7 @@ export const Navbar: React.FC = () => {
   }
 
   const handleOpenCommandPalette = () => {
+    window.dispatchEvent(new CustomEvent('open-command-palette'))
     window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))
   }
 
@@ -59,7 +60,7 @@ export const Navbar: React.FC = () => {
     <header
       className={`fixed top-0 left-0 right-0 h-16 z-40 transition-all duration-200 border-b ${
         isScrolled || isAppPortal
-          ? 'bg-[#F5F6FA]/85 backdrop-blur-md border-slate-200/70 shadow-xs'
+          ? 'backdrop-blur-md bg-[#F5F6FA]/85 border-slate-200/60 shadow-xs'
           : 'bg-[#F5F6FA]/60 backdrop-blur-sm border-transparent'
       }`}
     >

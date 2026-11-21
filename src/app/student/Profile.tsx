@@ -67,7 +67,7 @@ export default function Profile() {
       {/* Side-by-side in grid-cols-1 lg:grid-cols-12 gap-8 (4 cols for ID card, 8 cols for form) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* LEFT COLUMN: 4 COLS (Smart Digital Student ID with 3D Flip) */}
-        <div className="lg:col-span-5 xl:col-span-4 space-y-3">
+        <div className="lg:col-span-4 space-y-3">
           <div className="flex items-center justify-between px-1">
             <span className="text-xs font-bold text-[#64677A] uppercase tracking-wider">
               Smart Digital Student ID
@@ -167,7 +167,7 @@ export default function Profile() {
         </div>
 
         {/* RIGHT COLUMN: 8 COLS (Profile Form + Switch Identity + Reset Demo Data) */}
-        <div className="lg:col-span-7 xl:col-span-8 space-y-6">
+        <div className="lg:col-span-8 space-y-6">
           {/* Edit Profile Card */}
           <Card variant="elevated" className="p-6 sm:p-8">
             <h3 className="text-base font-bold text-[#141320] mb-1">Personal Information</h3>
