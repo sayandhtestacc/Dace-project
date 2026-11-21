@@ -9,12 +9,14 @@ import type {
   WalletTxn, GateLog, Notification, Visitor, ComplaintDraft, ComplaintComment,
 } from './types'
 import { createSeedData, type SeedData } from './seed'
-import { generateRefId } from '../lib/format'
+import { generateRefId, getInitials } from '../lib/format'
 
 interface AppState extends SeedData {
-  // ─── Role ───
+  // ─── Role & Students ───
   switchRole: (role: UserRole) => void
   switchStudent: (studentId: string) => void
+  addStudent: (s: Omit<Student, 'id' | 'qrToken' | 'avatarInitials'>) => string
+  updateStudentProfile: (studentId: string, updates: Partial<Student>) => void
 
   // ─── Complaints ───
   addComplaint: (c: Omit<Complaint, 'id' | 'refId' | 'createdAt' | 'resolvedAt' | 'rating' | 'comments' | 'upvotes' | 'status'>) => string
@@ -83,9 +85,30 @@ export const useStore = create<AppState>()(
             .toUpperCase()}`,
         }),
 
-      // ─── Role ───
+      // ─── Role & Students ───
       switchRole: (role) => set({ currentRole: role }),
       switchStudent: (studentId) => set({ currentStudentId: studentId }),
+      addStudent: (s) => {
+        const newId = `stu-${Math.random().toString(36).substring(2, 6)}`
+        const initials = getInitials(s.name)
+        const newStudent: Student = {
+          ...s,
+          id: newId,
+          qrToken: `QR-${s.name.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 8)}-${newId.slice(-2)}`,
+          avatarInitials: initials,
+        }
+        set((state) => ({
+          students: [newStudent, ...state.students],
+          currentStudentId: newId,
+        }))
+        return newId
+      },
+      updateStudentProfile: (studentId, updates) =>
+        set((state) => ({
+          students: state.students.map((stu) =>
+            stu.id === studentId ? { ...stu, ...updates } : stu
+          ),
+        })),
 
       // ─── Complaints ───
       addComplaint: (c) => {

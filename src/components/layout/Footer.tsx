@@ -16,14 +16,10 @@ export const Footer: React.FC = () => {
           {/* Column 1: Brand & Institution Info */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <CollegeLogo size="sm" />
-              <div className="flex flex-col">
-                <span className="font-semibold text-lg text-[#141320] leading-none">DUK Hub</span>
-                <span className="text-[10px] text-[#64677A] font-semibold mt-0.5">Digital University Kerala</span>
-              </div>
+              <CollegeLogo variant="full" size="sm" />
             </div>
             <p className="text-xs text-[#64677A] leading-relaxed">
-              Digital University Kerala (Kerala University of Digital Sciences, Innovation and Technology), Technopark Phase IV, Trivandrum.
+              Kerala University of Digital Sciences, Innovation and Technology (KUDSIT), Technopark Phase IV, Mangalapuram, Trivandrum - 695317.
             </p>
             <p className="text-[11px] text-[#64677A] leading-relaxed">
               DACE-I Student Innovation Showcase · Client-Side Demonstrator

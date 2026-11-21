@@ -87,7 +87,15 @@ export default function GateQR() {
   const [hasCamera, setHasCamera] = useState<boolean>(false)
   const [isScanning, setIsScanning] = useState<boolean>(false)
 
-  const purposes = ['Class', 'Library', 'Lab', 'Project work', 'Hostel', 'Event', 'Other']
+  const purposes = [
+    'Class (Kabani Block)',
+    'Library (24h Reading Room)',
+    'Lab (Kairali AI / VLSI)',
+    'Project Work (EWYL)',
+    'Maker Village / DSP',
+    'Hostel (Nila/Periyar)',
+    'Other',
+  ]
 
   // 30s countdown loop
   useEffect(() => {
@@ -389,7 +397,12 @@ export default function GateQR() {
                   </div>
 
                   <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs text-[#C9C7DA]">
-                    <span>{currentStudent.name}</span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-semibold text-white">{currentStudent.name}</span>
+                      <span className="text-[10px] bg-white/15 px-1.5 py-0.5 rounded text-white font-mono">
+                        {currentStudent.school || 'SoCSE'}
+                      </span>
+                    </div>
                     <span className="font-mono text-white font-bold">
                       {activeLog ? formatDuration(elapsedMs) : 'Ready at Gate'}
                     </span>
@@ -409,7 +422,9 @@ export default function GateQR() {
                     <div className="my-5 space-y-3 text-xs text-[#C9C7DA]">
                       <div>
                         <span className="text-[9px] uppercase font-bold text-white/50 block">Authorized Scholar</span>
-                        <span className="text-white font-medium">{currentStudent.name} ({currentStudent.department})</span>
+                        <span className="text-white font-medium">
+                          {currentStudent.name} ({currentStudent.school || 'SoCSE'} · {currentStudent.course || currentStudent.department})
+                        </span>
                       </div>
                       <div>
                         <span className="text-[9px] uppercase font-bold text-white/50 block">Campus Security Hotline</span>

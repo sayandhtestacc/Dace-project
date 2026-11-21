@@ -17,6 +17,14 @@ export interface Student {
   id: string
   name: string
   department: string
+  school?: 'SoCSE' | 'SoESA' | 'SoDS' | 'SoI' | 'SoDiHLA' | string
+  course?: string
+  specialization?: string
+  degreeLevel?: 'M.Tech' | 'M.Sc' | 'MBA' | 'MA' | 'PhD'
+  isEwyl?: boolean
+  rollNo?: string
+  campus?: string
+  hostelBlock?: string
   year: number
   email: string
   qrToken: string

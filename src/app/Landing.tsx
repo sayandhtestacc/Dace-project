@@ -237,12 +237,10 @@ export default function Landing() {
         <div className="max-w-[1200px] mx-auto px-6 md:px-10 w-full">
           <div className="flex justify-between items-center flex-wrap gap-6 border-y border-[#2B2644]/8 py-6">
             <div className="shrink-0 flex items-center gap-3">
-              <CollegeLogo size="sm" />
-              <div>
-                <p className="text-xs font-bold text-[#141320] uppercase tracking-wider">
-                  Digital University Kerala
-                </p>
-                <p className="text-[11px] text-[#64677A]">DACE-I Innovation Showcase 2026</p>
+              <CollegeLogo variant="full" size="sm" />
+              <div className="hidden sm:block border-l border-[#2B2644]/15 pl-3">
+                <p className="text-[11px] text-[#64677A] font-medium">DACE-I Innovation Showcase 2026</p>
+                <p className="text-[10px] text-[#2B2644] font-semibold">Technopark Phase IV · Trivandrum</p>
               </div>
             </div>
 
