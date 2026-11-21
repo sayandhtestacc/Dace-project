@@ -386,9 +386,86 @@ export default function AdminGate() {
             <div className="flex items-center justify-between pb-3 border-b border-[#2B2644]/8">
               <div>
                 <h3 className="text-sm font-bold text-[#141320]">Security Guard Scanner</h3>
-                <p className="text-xs text-[#64677A]">Scan student phone passes at the gate post</p>
+                <p className="text-xs text-[#64677A]">Point terminal camera at student phone pass or select simulated scan</p>
               </div>
-              <Badge variant="purple">Guard Mode</Badge>
+              <div className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-[10px] font-bold text-emerald-700 uppercase">Scanner Armed</span>
+              </div>
+            </div>
+
+            {/* Live Camera Viewfinder HUD */}
+            <div className="relative w-full h-48 bg-[#11101D] rounded-[20px] overflow-hidden border border-[#2B2644]/20 flex items-center justify-center shadow-inner">
+              {/* Optional live video feed */}
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                muted
+                className={`absolute inset-0 w-full h-full object-cover ${hasCamera ? 'opacity-85' : 'hidden'}`}
+              />
+
+              {/* Viewfinder Overlay HUD */}
+              <div className="relative z-10 w-44 h-36 border-2 border-emerald-400/60 rounded-xl flex items-center justify-center p-2 pointer-events-none">
+                {/* 4 Corner Markers */}
+                <span className="absolute -top-1 -left-1 w-3.5 h-3.5 border-t-2 border-l-2 border-emerald-400" />
+                <span className="absolute -top-1 -right-1 w-3.5 h-3.5 border-t-2 border-r-2 border-emerald-400" />
+                <span className="absolute -bottom-1 -left-1 w-3.5 h-3.5 border-b-2 border-l-2 border-emerald-400" />
+                <span className="absolute -bottom-1 -right-1 w-3.5 h-3.5 border-b-2 border-r-2 border-emerald-400" />
+
+                {/* Animated Sweeping Laser Line */}
+                <div className="absolute inset-x-2 top-0 h-0.5 bg-gradient-to-r from-transparent via-emerald-400 to-transparent shadow-[0_0_8px_#34d399] animate-[bounce_2s_infinite]" />
+
+                <div className="text-center">
+                  <Camera className="w-6 h-6 text-emerald-400/80 mx-auto mb-1 animate-pulse" />
+                  <span className="text-[10px] uppercase font-mono font-bold text-emerald-300 tracking-wider">
+                    {hasCamera ? 'Live Camera Feed' : 'Optical Laser Target'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="absolute bottom-2.5 inset-x-0 flex items-center justify-between px-4 text-[10px] text-white/70">
+                <span className="font-mono">TURNSTILE: {activeGateName.toUpperCase()}</span>
+                <span className="bg-black/60 px-2 py-0.5 rounded text-emerald-300 font-mono">
+                  AES-256 ROTATING PASSKEY
+                </span>
+              </div>
+            </div>
+
+            {/* Quick 1-Click Scan from Student Phone Bar */}
+            <div>
+              <label className="text-[10px] font-bold uppercase text-[#64677A] block mb-1.5">
+                Simulate Scanning Student Phone Pass:
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {students.slice(0, 5).map((stu) => {
+                  const isCur = scannedStudentId === stu.id
+                  return (
+                    <button
+                      key={stu.id}
+                      type="button"
+                      onClick={() => {
+                        setScannedStudentId(stu.id)
+                        playSuccessChime()
+                        setScanFeedback({
+                          title: 'Pass Authenticated',
+                          subtitle: `Scanned ${stu.name} (${stu.school || 'SoCSE'})`,
+                        })
+                        setTimeout(() => setScanFeedback(null), 3000)
+                      }}
+                      className={`text-xs px-3 py-1.5 rounded-xl border transition-all cursor-pointer flex items-center gap-1.5 ${
+                        isCur
+                          ? 'bg-[#2B2644] text-white border-[#2B2644] shadow-xs'
+                          : 'bg-[#F5F6FA] text-[#2B2644] border-[#2B2644]/12 hover:bg-[#E9ECF6]'
+                      }`}
+                    >
+                      <QrCode className="w-3.5 h-3.5 opacity-80" />
+                      <span className="font-semibold">{stu.name.split(' ')[0]}</span>
+                      <span className="text-[10px] opacity-75 font-mono">({stu.school || 'SoCSE'})</span>
+                    </button>
+                  )
+                })}
+              </div>
             </div>
 
             {/* Scan Success Feedback Alert */}
@@ -404,31 +481,13 @@ export default function AdminGate() {
                   </div>
                 </div>
                 <span className="text-[10px] uppercase font-bold text-[#1E6B52] bg-white px-2 py-0.5 rounded-full border border-[#1E6B52]/20">
-                  Cleared
+                  Verified Scholar
                 </span>
               </div>
             )}
 
-            {/* Student Selector to Simulate Scan */}
+            {/* Verified Student Credentials Card */}
             <div className="space-y-3">
-              <div>
-                <label className="text-[10px] font-bold uppercase text-[#64677A] block mb-1">
-                  Select Student Phone Pass to Verify
-                </label>
-                <select
-                  value={scannedStudentId}
-                  onChange={(e) => setScannedStudentId(e.target.value)}
-                  className="w-full text-xs p-3 rounded-[12px] bg-[#F5F6FA] border border-[#2B2644]/12 text-[#141320] font-medium outline-none"
-                >
-                  {students.map((s) => (
-                    <option key={s.id} value={s.id}>
-                      {s.name} — {s.department} (Year {s.year}) [{s.qrToken}]
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Verified Student Credentials Card */}
               <div className="p-4 rounded-[18px] bg-[#F5F6FA] border border-[#2B2644]/8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-3.5">
                   <div className="w-12 h-12 rounded-[14px] bg-[#2B2644] text-white flex items-center justify-center font-bold text-sm shadow-xs shrink-0">
@@ -436,17 +495,19 @@ export default function AdminGate() {
                   </div>
                   <div>
                     <h4 className="text-xs font-bold text-[#141320]">{selectedStudent.name}</h4>
-                    <p className="text-[11px] text-[#64677A]">{selectedStudent.department} · Year {selectedStudent.year}</p>
+                    <p className="text-[11px] text-[#64677A]">
+                      {selectedStudent.school || 'SoCSE'} · {selectedStudent.course || selectedStudent.department}
+                    </p>
                     <span className="text-[10px] text-[#2B2644] font-mono mt-0.5 block">
-                      Token: {selectedStudent.qrToken} · {studentActiveLog ? 'Status: INSIDE' : 'Status: OUTSIDE'}
+                      Token: {selectedStudent.qrToken} · {studentActiveLog ? 'Status: INSIDE CAMPUS' : 'Status: OUTSIDE CAMPUS'}
                     </span>
                   </div>
                 </div>
 
                 <div className="flex sm:flex-col items-center sm:items-end justify-between gap-1 border-t sm:border-t-0 pt-2 sm:pt-0 border-[#2B2644]/8">
                   <span className="text-[10px] font-bold uppercase text-[#64677A]">Identity Check</span>
-                  <span className="text-xs font-bold text-[#2B2644] bg-white px-2.5 py-1 rounded-full border border-[#2B2644]/12">
-                    Verified Scholar
+                  <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                    Verified Scholar Pass
                   </span>
                 </div>
               </div>
@@ -456,27 +517,27 @@ export default function AdminGate() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                   <div>
                     <label className="text-[10px] font-bold uppercase text-[#64677A] block mb-1">
-                      Purpose
+                      Campus Entry Purpose
                     </label>
                     <select
                       value={scanPurpose}
                       onChange={(e) => setScanPurpose(e.target.value)}
                       className="w-full text-xs p-2.5 rounded-[10px] bg-[#F5F6FA] border border-[#2B2644]/12 outline-none font-medium"
                     >
-                      {['Class', 'Library', 'Lab', 'Project work', 'Hostel', 'Event', 'Other'].map((p) => (
+                      {['Class', 'Library (24h)', 'Lab (Kairali AI / VLSI)', 'Project Work (EWYL)', 'Hostel', 'Event', 'Other'].map((p) => (
                         <option key={p} value={p}>{p}</option>
                       ))}
                     </select>
                   </div>
                   <div>
                     <label className="text-[10px] font-bold uppercase text-[#64677A] block mb-1">
-                      Destination
+                      Destination Building
                     </label>
                     <input
                       type="text"
                       value={scanDestination}
                       onChange={(e) => setScanDestination(e.target.value)}
-                      placeholder="e.g. Computing Lab"
+                      placeholder="e.g. Kabani Academic Block, Kairali AI Lab"
                       className="w-full text-xs p-2.5 rounded-[10px] bg-[#F5F6FA] border border-[#2B2644]/12 outline-none"
                     />
                   </div>
@@ -503,7 +564,7 @@ export default function AdminGate() {
                   className="flex-1"
                   iconLeft={<LogOut className="w-4 h-4" />}
                 >
-                  Approve Exit & Close
+                  Approve Exit & Close Log
                 </Button>
               </div>
             </div>

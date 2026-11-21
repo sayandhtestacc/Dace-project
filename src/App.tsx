@@ -34,6 +34,7 @@ const Profile = lazy(() => import('@/app/student/Profile'))
 // Admin / Staff Pages
 const AdminDashboard = lazy(() => import('@/app/admin/AdminDashboard'))
 const AdminComplaints = lazy(() => import('@/app/admin/AdminComplaints'))
+const WardenComplaints = lazy(() => import('@/app/admin/WardenComplaints'))
 const AdminMess = lazy(() => import('@/app/admin/AdminMess'))
 const AdminGate = lazy(() => import('@/app/admin/AdminGate'))
 
@@ -119,12 +120,14 @@ export default function App() {
               <Route path="admin" element={<AdminComplaints />} />
               <Route path="security" element={<AdminGate />} />
               <Route path="warden" element={<AdminDashboard />} />
+              <Route path="warden/complaints" element={<WardenComplaints />} />
             </Route>
 
             {/* Admin App Portal (Direct Routes) */}
             <Route path="/admin" element={<AppLayout />}>
               <Route index element={<AdminDashboard />} />
               <Route path="complaints" element={<AdminComplaints />} />
+              <Route path="escalations" element={<WardenComplaints />} />
               <Route path="mess" element={<AdminMess />} />
               <Route path="gate" element={<AdminGate />} />
             </Route>

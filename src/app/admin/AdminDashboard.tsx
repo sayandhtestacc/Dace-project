@@ -33,7 +33,7 @@ import { Button } from '@/components/ui/Button'
 import { useToast } from '@/components/ui/Toast'
 
 export default function AdminDashboard() {
-  const { complaints, mealBookings, gateLogs, notifications } = useStore()
+  const { complaints, students, mealBookings, gateLogs, notifications } = useStore()
   const { success } = useToast()
 
   // KPIs
@@ -127,7 +127,7 @@ export default function AdminDashboard() {
           >
             Export Gate Log (CSV)
           </Button>
-          <Link to="/app/admin">
+          <Link to="/app/warden/complaints">
             <Button variant="primary" size="sm">
               Manage Complaints
             </Button>
@@ -137,18 +137,21 @@ export default function AdminDashboard() {
 
       {/* KPI Row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
-        <Card variant="elevated" className="p-5">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-semibold text-[#64677A] uppercase">Active Complaints</span>
-            <span className="p-2 rounded-full bg-[#F0F2FA] text-[#2B2644]">
-              <AlertCircle className="w-4 h-4" />
-            </span>
-          </div>
-          <div className="text-3xl font-bold text-[#141320]">{openComplaintsCount}</div>
-          <p className="text-[11px] text-[#64677A] mt-2">
-            {resolvedCount} resolved this semester
-          </p>
-        </Card>
+        <Link to="/app/warden/complaints" className="block group">
+          <Card variant="elevated" className="p-5 h-full transition-all group-hover:-translate-y-0.5 group-hover:border-[#2B2644]/20">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[11px] font-semibold text-[#64677A] uppercase group-hover:text-[#2B2644]">Active Complaints</span>
+              <span className="p-2 rounded-full bg-[#F0F2FA] text-[#2B2644]">
+                <AlertCircle className="w-4 h-4" />
+              </span>
+            </div>
+            <div className="text-3xl font-bold text-[#141320] group-hover:text-[#2B2644]">{openComplaintsCount}</div>
+            <p className="text-[11px] text-[#64677A] mt-2 flex items-center justify-between">
+              <span>{resolvedCount} resolved</span>
+              <span className="text-[#2B2644] font-semibold">Inspect →</span>
+            </p>
+          </Card>
+        </Link>
 
         <Card variant="elevated" className="p-5">
           <div className="flex items-center justify-between mb-2">
@@ -245,27 +248,33 @@ export default function AdminDashboard() {
 
             <div className="space-y-4 pt-2">
               {categoryData.map((cat) => (
-                <div key={cat.name} className="space-y-1.5">
+                <Link
+                  key={cat.name}
+                  to={`/app/warden/complaints?category=${cat.name}`}
+                  className="block space-y-1.5 group cursor-pointer"
+                >
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-semibold text-[#141320]">{cat.name}</span>
+                    <span className="font-semibold text-[#141320] group-hover:text-[#2B2644] group-hover:underline">
+                      {cat.name}
+                    </span>
                     <span className="text-[#64677A]">
                       {cat.count} tickets <span className="text-[#2B2644] font-bold">({cat.percent}%)</span>
                     </span>
                   </div>
                   <div className="w-full bg-[#F5F6FA] rounded-full h-2.5 overflow-hidden border border-[#2B2644]/6">
                     <div
-                      className="bg-[#2B2644] h-full rounded-full transition-all duration-500"
+                      className="bg-[#2B2644] h-full rounded-full transition-all duration-500 group-hover:bg-[#11101D]"
                       style={{ width: `${Math.max(8, cat.percent)}%` }}
                     />
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
 
           <div className="pt-4 border-t border-[#2B2644]/8 text-xs text-[#64677A] flex items-center justify-between mt-4">
             <span>Resolution Target: &lt; 24h</span>
-            <Link to="/app/admin" className="text-[#2B2644] font-semibold hover:underline">
+            <Link to="/app/warden/complaints" className="text-[#2B2644] font-semibold hover:underline">
               Inspect Redressal Queue →
             </Link>
           </div>
@@ -346,6 +355,77 @@ export default function AdminDashboard() {
             <span className="w-3 h-3 rounded-[3px] bg-[#C5CBE8]" />
             <span className="text-[#64677A]">Actually Served</span>
           </div>
+        </div>
+      </Card>
+
+      {/* Live Campus Grievance Escalation Queue Preview */}
+      <Card variant="elevated" className="overflow-hidden">
+        <div className="p-6 pb-4 border-b border-[#2B2644]/8 flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-bold text-[#141320]">Active Campus Grievance Queue</h3>
+            <p className="text-xs text-[#64677A]">Live tickets requiring department resolution and warden oversight</p>
+          </div>
+          <Link to="/app/warden/complaints" className="text-xs font-semibold text-[#2B2644] hover:underline flex items-center gap-1">
+            <span>Manage All Escalations</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-[#F5F6FA] border-b border-[#2B2644]/8 text-[#64677A] uppercase text-[10px] font-bold">
+              <tr>
+                <th className="py-3 px-4">Ref ID</th>
+                <th className="py-3 px-4">Student</th>
+                <th className="py-3 px-4">Category</th>
+                <th className="py-3 px-4">Issue Title</th>
+                <th className="py-3 px-4">Assigned Dept</th>
+                <th className="py-3 px-4">Priority & Status</th>
+                <th className="py-3 px-4 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#2B2644]/6">
+              {complaints.filter(c => c.status !== 'Resolved').slice(0, 5).map(c => {
+                const stu = students.find(s => s.id === c.studentId)
+                return (
+                  <tr key={c.id} className="hover:bg-[#F5F6FA]/60">
+                    <td className="py-3.5 px-4 font-mono font-bold text-[#2B2644]">{c.refId}</td>
+                    <td className="py-3.5 px-4">
+                      {c.isAnonymous ? (
+                        <span className="text-[#64677A] italic">Anonymous</span>
+                      ) : (
+                        <span className="font-semibold text-[#141320]">{stu?.name || 'Scholar'}</span>
+                      )}
+                    </td>
+                    <td className="py-3.5 px-4">
+                      <span className="px-2 py-0.5 rounded bg-[#2B2644]/6 text-[#2B2644] font-medium text-[10px]">
+                        {c.category}
+                      </span>
+                    </td>
+                    <td className="py-3.5 px-4 max-w-xs">
+                      <span className="font-semibold text-[#141320] line-clamp-1">{c.title}</span>
+                    </td>
+                    <td className="py-3.5 px-4 text-[#64677A]">{c.assignedTo || 'Unassigned'}</td>
+                    <td className="py-3.5 px-4">
+                      <div className="flex items-center gap-1.5">
+                        <Badge variant={c.priority === 'Urgent' ? 'error' : 'neutral'}>{c.priority}</Badge>
+                        <Badge variant="purple">{c.status}</Badge>
+                      </div>
+                    </td>
+                    <td className="py-3.5 px-4 text-right">
+                      <Link
+                        to={`/app/complaints/${c.id}`}
+                        className="inline-flex items-center gap-1 font-semibold text-[#2B2644] hover:underline"
+                      >
+                        <span>Inspect</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </Link>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
         </div>
       </Card>
     </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Search,
@@ -15,6 +15,8 @@ import {
   CheckCircle,
   EyeOff,
   Printer,
+  User,
+  Users,
 } from 'lucide-react'
 import { useStore } from '@/data/store'
 import type { ComplaintCategory, ComplaintStatus } from '@/data/types'
@@ -28,7 +30,9 @@ import { useToast } from '@/components/ui/Toast'
 export default function ComplaintsList() {
   const { complaints, upvoteComplaint, currentStudentId } = useStore()
   const { success } = useToast()
+  const [searchParams, setSearchParams] = useSearchParams()
 
+  const [scope, setScope] = useState<'mine' | 'all'>((searchParams.get('scope') as any) || 'all')
   const [activeTab, setActiveTab] = useState<'all' | 'open' | 'in_progress' | 'resolved'>('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<ComplaintCategory | 'all'>('all')
@@ -37,8 +41,13 @@ export default function ComplaintsList() {
 
   const categories: (ComplaintCategory | 'all')[] = ['all', 'Technical', 'Hostel', 'Academic', 'Mess', 'Other']
 
+  const myComplaintsCount = complaints.filter((c) => c.studentId === currentStudentId).length
+
   // Filter complaints
   const filtered = complaints.filter((c) => {
+    // Scope filter (mine vs all)
+    if (scope === 'mine' && c.studentId !== currentStudentId) return false
+
     // Tab filter
     if (activeTab === 'open' && c.status !== 'Submitted' && c.status !== 'Assigned') return false
     if (activeTab === 'in_progress' && c.status !== 'In Progress') return false
@@ -107,6 +116,34 @@ export default function ComplaintsList() {
             </Button>
           </Link>
         </div>
+      </div>
+
+      {/* Scope Selector: My Tickets vs Campus Community Feed */}
+      <div className="flex items-center gap-2 p-1.5 bg-[#E9ECF6]/60 rounded-2xl border border-[#2B2644]/10 w-fit">
+        <button
+          type="button"
+          onClick={() => setScope('mine')}
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+            scope === 'mine'
+              ? 'bg-[#2B2644] text-white shadow-xs'
+              : 'text-[#64677A] hover:text-[#141320]'
+          }`}
+        >
+          <User className="w-3.5 h-3.5" />
+          <span>My Complaints ({myComplaintsCount})</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setScope('all')}
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+            scope === 'all'
+              ? 'bg-[#2B2644] text-white shadow-xs'
+              : 'text-[#64677A] hover:text-[#141320]'
+          }`}
+        >
+          <Users className="w-3.5 h-3.5" />
+          <span>Campus Community Feed ({complaints.length})</span>
+        </button>
       </div>
 
       {/* Control Bar: Tabs, Search, Sort, View Toggle */}

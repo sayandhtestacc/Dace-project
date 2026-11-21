@@ -48,9 +48,9 @@ export const AppLayout: React.FC = () => {
         ]
       case 'admin':
         return [
-          { label: 'Complaints Queue', path: '/app/admin', icon: AlertCircle },
-          { label: 'Analytics Summary', path: '/admin', icon: LayoutDashboard },
-          { label: 'Gate Access Audit', path: '/app/security', icon: Shield },
+          { label: 'Department Queue', path: '/app/admin', icon: AlertCircle },
+          { label: 'Warden Escalations', path: '/app/warden/complaints', icon: Shield },
+          { label: 'Gate Access Audit', path: '/app/security', icon: Users },
           { label: 'Student Directory', path: '/app/profile', icon: User },
         ]
       case 'security':
@@ -63,7 +63,7 @@ export const AppLayout: React.FC = () => {
       case 'warden':
         return [
           { label: 'Campus Overview', path: '/app/warden', icon: LayoutDashboard },
-          { label: 'Complaints Inbox', path: '/app/admin', icon: AlertCircle },
+          { label: 'Executive Grievances', path: '/app/warden/complaints', icon: AlertCircle },
           { label: 'Mess Headcounts', path: '/app/mess-manager', icon: Utensils },
           { label: 'Gate Security', path: '/app/security', icon: Shield },
         ]

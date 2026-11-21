@@ -87,7 +87,7 @@ export default function StudentDashboard() {
       {/* 3 KPI CARDS IN CLEAN ALIGNED 3-COLUMN GRID with unified lavender icon containers */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* KPI 1: Open Complaints */}
-        <Link to="/app/complaints" className="block group">
+        <Link to="/app/complaints?scope=mine" className="block group">
           <Card variant="elevated" className="p-6 h-full flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-3">
@@ -104,7 +104,7 @@ export default function StudentDashboard() {
             </div>
             <div className="mt-4 flex items-center justify-between text-xs text-[#64677A] border-t border-[rgba(43,38,68,0.06)] pt-3">
               <span>{myComplaints.length} total tickets logged</span>
-              <span className="text-[#2B2644] font-semibold group-hover:underline">Track →</span>
+              <span className="text-[#2B2644] font-semibold group-hover:underline">View My Tickets →</span>
             </div>
           </Card>
         </Link>
@@ -234,7 +234,61 @@ export default function StudentDashboard() {
         </Card>
       </div>
 
-      {/* Row 3 (Activity Feed): Clean white card */}
+      {/* Row 3: My Grievances Quick Preview */}
+      <div className="bg-white rounded-[24px] p-6 border border-[#2B2644]/8 shadow-[0_8px_30px_rgba(43,38,68,0.05)]">
+        <div className="flex items-center justify-between pb-4 border-b border-[#2B2644]/8">
+          <div>
+            <h3 className="text-sm font-bold text-[#141320]">My Service Complaints</h3>
+            <p className="text-xs text-[#64677A]">Track grievance redressal progress and technician assignees</p>
+          </div>
+          <Link to="/app/complaints?scope=mine" className="text-xs text-[#2B2644] font-semibold hover:underline flex items-center gap-1">
+            <span>View All ({myComplaints.length})</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        {myComplaints.length === 0 ? (
+          <div className="py-8 text-center text-xs text-[#64677A]">
+            <p>You have no active complaints logged.</p>
+            <Link to="/app/complaints/new" className="mt-3 inline-block">
+              <Button variant="primary" size="sm" iconLeft={<Plus className="w-3.5 h-3.5" />}>
+                File New Complaint
+              </Button>
+            </Link>
+          </div>
+        ) : (
+          <div className="divide-y divide-[#2B2644]/8">
+            {myComplaints.slice(0, 3).map((c) => (
+              <Link
+                key={c.id}
+                to={`/app/complaints/${c.id}`}
+                className="py-3.5 flex items-center justify-between hover:bg-[#F5F6FA] px-2 rounded-xl transition-colors group"
+              >
+                <div className="space-y-0.5">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-[11px] font-bold text-[#2B2644]">{c.refId}</span>
+                    <Badge variant={c.status === 'Resolved' ? 'success' : c.status === 'In Progress' ? 'purple' : 'warning'}>
+                      {c.status}
+                    </Badge>
+                    <span className="text-[10px] text-[#64677A] bg-[#2B2644]/6 px-2 py-0.5 rounded font-medium">
+                      {c.category}
+                    </span>
+                  </div>
+                  <h4 className="text-xs font-semibold text-[#141320] group-hover:text-[#2B2644] group-hover:underline">
+                    {c.title}
+                  </h4>
+                  <p className="text-[11px] text-[#64677A]">
+                    Assigned: {c.assignedTo || 'Pending Triage'} · {relativeTime(c.createdAt)}
+                  </p>
+                </div>
+                <ArrowRight className="w-4 h-4 text-[#64677A] group-hover:text-[#2B2644] group-hover:translate-x-1 transition-transform" />
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Row 4 (Activity Feed): Clean white card */}
       <div className="bg-white rounded-[20px] p-6 border border-[#2B2644]/8 shadow-[0_8px_30px_rgba(43,38,68,0.05)]">
         <div className="flex items-center justify-between pb-4 border-b border-[#2B2644]/8">
           <h3 className="text-sm font-bold text-[#141320]">Recent Activity Feed</h3>
