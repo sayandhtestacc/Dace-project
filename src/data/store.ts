@@ -1,0 +1,283 @@
+/**
+ * DUK Hub — Global State (Zustand + localStorage)
+ */
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+import type {
+  UserRole, Student, Complaint, ComplaintStatus, ComplaintPriority,
+  DayMenu, MealBooking, MealType, BookingStatus,
+  WalletTxn, GateLog, Notification, Visitor, ComplaintDraft, ComplaintComment,
+} from './types'
+import { createSeedData, type SeedData } from './seed'
+import { generateRefId } from '../lib/format'
+
+interface AppState extends SeedData {
+  // ─── Role ───
+  switchRole: (role: UserRole) => void
+  switchStudent: (studentId: string) => void
+
+  // ─── Complaints ───
+  addComplaint: (c: Omit<Complaint, 'id' | 'refId' | 'createdAt' | 'resolvedAt' | 'rating' | 'comments' | 'upvotes' | 'status'>) => string
+  updateComplaintStatus: (id: string, status: ComplaintStatus, assignedTo?: string) => void
+  addComplaintComment: (complaintId: string, comment: Omit<ComplaintComment, 'id' | 'createdAt'>) => void
+  rateComplaint: (id: string, rating: number) => void
+  upvoteComplaint: (id: string) => void
+
+  // ─── Mess ───
+  bookMeal: (studentId: string, date: string, mealType: MealType, price: number) => void
+  skipMeal: (bookingId: string) => void
+  markServed: (bookingId: string) => void
+  topUpWallet: (studentId: string, amount: number) => void
+
+  // ─── Gate ───
+  logEntry: (studentId: string, purpose: string, destination: string) => void
+  logExit: (logId: string) => void
+  addVisitor: (visitor: Omit<Visitor, 'id'>) => void
+
+  // ─── Notifications ───
+  addNotification: (n: Omit<Notification, 'id' | 'createdAt' | 'read'>) => void
+  markNotificationRead: (id: string) => void
+  markAllNotificationsRead: () => void
+
+  // ─── Draft ───
+  complaintDraft: ComplaintDraft | null
+  saveComplaintDraft: (draft: ComplaintDraft) => void
+  clearComplaintDraft: () => void
+
+  // ─── Reset ───
+  resetDemoData: () => void
+}
+
+const id = () => Math.random().toString(36).substring(2, 11)
+
+export const useStore = create<AppState>()(
+  persist(
+    (set, get) => ({
+      ...createSeedData(),
+      complaintDraft: null,
+
+      // ─── Role ───
+      switchRole: (role) => set({ currentRole: role }),
+      switchStudent: (studentId) => set({ currentStudentId: studentId }),
+
+      // ─── Complaints ───
+      addComplaint: (c) => {
+        const refId = generateRefId('CMP')
+        const complaint: Complaint = {
+          ...c,
+          id: id(),
+          refId,
+          status: 'Submitted',
+          createdAt: Date.now(),
+          resolvedAt: null,
+          rating: null,
+          comments: [],
+          upvotes: 0,
+        }
+        set(s => ({
+          complaints: [complaint, ...s.complaints],
+          notifications: [{
+            id: id(),
+            title: 'Complaint Submitted',
+            message: `Your complaint "${c.title}" has been submitted. Reference: ${refId}`,
+            type: 'update' as const,
+            read: false,
+            createdAt: Date.now(),
+            link: '/app/complaints',
+          }, ...s.notifications],
+        }))
+        return refId
+      },
+
+      updateComplaintStatus: (cid, status, assignedTo) => set(s => ({
+        complaints: s.complaints.map(c =>
+          c.id === cid ? {
+            ...c,
+            status,
+            assignedTo: assignedTo ?? c.assignedTo,
+            resolvedAt: status === 'Resolved' ? Date.now() : c.resolvedAt,
+          } : c
+        ),
+        notifications: [{
+          id: id(),
+          title: 'Complaint Update',
+          message: `Complaint ${s.complaints.find(c => c.id === cid)?.refId} status changed to ${status}.`,
+          type: 'update' as const,
+          read: false,
+          createdAt: Date.now(),
+          link: '/app/complaints',
+        }, ...s.notifications],
+      })),
+
+      addComplaintComment: (complaintId, comment) => set(s => ({
+        complaints: s.complaints.map(c =>
+          c.id === complaintId ? {
+            ...c,
+            comments: [...c.comments, { ...comment, id: id(), createdAt: Date.now() }],
+          } : c
+        ),
+      })),
+
+      rateComplaint: (cid, rating) => set(s => ({
+        complaints: s.complaints.map(c =>
+          c.id === cid ? {
+            ...c,
+            rating,
+            status: rating <= 2 ? 'Reopened' : c.status,
+          } : c
+        ),
+      })),
+
+      upvoteComplaint: (cid) => set(s => ({
+        complaints: s.complaints.map(c =>
+          c.id === cid ? { ...c, upvotes: c.upvotes + 1 } : c
+        ),
+      })),
+
+      // ─── Mess ───
+      bookMeal: (studentId, date, mealType, price) => {
+        const booking: MealBooking = {
+          id: id(),
+          studentId,
+          date,
+          mealType,
+          status: 'booked',
+          price,
+          bookedAt: Date.now(),
+        }
+        const txn: WalletTxn = {
+          id: id(),
+          studentId,
+          amount: -price,
+          type: 'deduction',
+          description: `${mealType} booking — ${date}`,
+          createdAt: Date.now(),
+          balanceAfter: 0,
+        }
+        set(s => {
+          const student = s.students.find(st => st.id === studentId)!
+          const newBalance = student.walletBalance - price
+          txn.balanceAfter = newBalance
+          return {
+            mealBookings: [...s.mealBookings, booking],
+            walletTxns: [txn, ...s.walletTxns],
+            students: s.students.map(st =>
+              st.id === studentId ? { ...st, walletBalance: newBalance } : st
+            ),
+          }
+        })
+      },
+
+      skipMeal: (bookingId) => set(s => {
+        const booking = s.mealBookings.find(b => b.id === bookingId)!
+        const refundTxn: WalletTxn = {
+          id: id(),
+          studentId: booking.studentId,
+          amount: booking.price,
+          type: 'refund',
+          description: `${booking.mealType} skip refund — ${booking.date}`,
+          createdAt: Date.now(),
+          balanceAfter: 0,
+        }
+        const student = s.students.find(st => st.id === booking.studentId)!
+        const newBalance = student.walletBalance + booking.price
+        refundTxn.balanceAfter = newBalance
+        return {
+          mealBookings: s.mealBookings.map(b =>
+            b.id === bookingId ? { ...b, status: 'skipped' as BookingStatus } : b
+          ),
+          walletTxns: [refundTxn, ...s.walletTxns],
+          students: s.students.map(st =>
+            st.id === booking.studentId ? { ...st, walletBalance: newBalance } : st
+          ),
+        }
+      }),
+
+      markServed: (bookingId) => set(s => ({
+        mealBookings: s.mealBookings.map(b =>
+          b.id === bookingId ? { ...b, status: 'served' as BookingStatus } : b
+        ),
+      })),
+
+      topUpWallet: (studentId, amount) => set(s => {
+        const student = s.students.find(st => st.id === studentId)!
+        const newBalance = student.walletBalance + amount
+        return {
+          students: s.students.map(st =>
+            st.id === studentId ? { ...st, walletBalance: newBalance } : st
+          ),
+          walletTxns: [{
+            id: id(),
+            studentId,
+            amount,
+            type: 'topup' as const,
+            description: `Wallet top-up`,
+            createdAt: Date.now(),
+            balanceAfter: newBalance,
+          }, ...s.walletTxns],
+          notifications: [{
+            id: id(),
+            title: 'Wallet Top-up',
+            message: `₹${amount} added to your mess wallet. New balance: ₹${newBalance}`,
+            type: 'update' as const,
+            read: false,
+            createdAt: Date.now(),
+            link: '/app/mess/wallet',
+          }, ...s.notifications],
+        }
+      }),
+
+      // ─── Gate ───
+      logEntry: (studentId, purpose, destination) => {
+        const student = get().students.find(s => s.id === studentId)!
+        set(s => ({
+          gateLogs: [{
+            id: id(),
+            studentId,
+            studentName: student.name,
+            department: student.department,
+            entryTime: Date.now(),
+            exitTime: null,
+            purpose,
+            destination,
+          }, ...s.gateLogs],
+        }))
+      },
+
+      logExit: (logId) => set(s => ({
+        gateLogs: s.gateLogs.map(l =>
+          l.id === logId ? { ...l, exitTime: Date.now() } : l
+        ),
+      })),
+
+      addVisitor: (visitor) => set(s => ({
+        visitors: [{ ...visitor, id: id() }, ...s.visitors],
+      })),
+
+      // ─── Notifications ───
+      addNotification: (n) => set(s => ({
+        notifications: [{ ...n, id: id(), createdAt: Date.now(), read: false }, ...s.notifications],
+      })),
+      markNotificationRead: (nid) => set(s => ({
+        notifications: s.notifications.map(n => n.id === nid ? { ...n, read: true } : n),
+      })),
+      markAllNotificationsRead: () => set(s => ({
+        notifications: s.notifications.map(n => ({ ...n, read: true })),
+      })),
+
+      // ─── Draft ───
+      saveComplaintDraft: (draft) => set({ complaintDraft: draft }),
+      clearComplaintDraft: () => set({ complaintDraft: null }),
+
+      // ─── Reset ───
+      resetDemoData: () => {
+        const fresh = createSeedData()
+        set({ ...fresh, complaintDraft: null })
+      },
+    }),
+    {
+      name: 'duk-hub-store',
+      version: 1,
+    }
+  )
+)
